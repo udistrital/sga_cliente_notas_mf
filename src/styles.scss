@@ -49,3 +49,11 @@ fieldset {
 button:focus {
   outline: none !important;
 }
+
+.mat-mdc-raised-button:not(:disabled) {
+  color: white !important;
+}
+
+.mat-pseudo-checkbox {
+  display: none !important;
+}

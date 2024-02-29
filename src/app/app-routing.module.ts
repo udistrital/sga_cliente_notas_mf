@@ -7,6 +7,10 @@ export const routes: Routes = [
   {
     path: 'empty-route',
     component: EmptyRouteComponent
+  },
+  {
+    path: '',
+    loadChildren: () => import ('./notas/notas.module').then(m => m.NotasModule),
   }
 ];
 
