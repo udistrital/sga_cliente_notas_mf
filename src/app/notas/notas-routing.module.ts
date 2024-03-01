@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/auth.guard';
 import { NotasComponent } from './notas.component';
 import { DefinicionCortesComponent } from './definicion-cortes/definicion-cortes.component';
+import { ListNotasComponent } from './list-notas/list-notas.component';
 
 const routes: Routes = [{
     path: '',
@@ -11,6 +12,11 @@ const routes: Routes = [{
         {
             path: 'definicion-cortes',
             component: DefinicionCortesComponent,
+//            canActivate: [AuthGuard],
+        },
+        {
+            path: 'list-notas',
+            component: ListNotasComponent,
 //            canActivate: [AuthGuard],
         }
     ],
@@ -28,5 +34,6 @@ export class NotasRoutingComponent { }
 
 export const routedComponents = [
     NotasComponent,
-    DefinicionCortesComponent
+    DefinicionCortesComponent,
+    ListNotasComponent
 ]

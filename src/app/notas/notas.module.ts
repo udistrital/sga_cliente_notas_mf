@@ -45,6 +45,10 @@ import { SgaMidService } from 'src/data/services/sga_mid.service';
 import { EventoService } from 'src/data/services/evento.service';
 import { ProyectoAcademicoService } from 'src/data/services/proyecto_academico.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ParametrosService } from 'src/data/services/parametros.service';
+import { UserService } from 'src/data/services/users.service';
+import { RegistroNotasService } from 'src/data/services/registro_notas.service';
+import { TimeService } from 'src/data/services/time.service';
 
 @NgModule({
   declarations: [
@@ -101,6 +105,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     SgaMidService,
     EventoService,
     ProyectoAcademicoService,
+    UserService,
+    RegistroNotasService,
+    TimeService,
+    ParametrosService,
     {
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntl
