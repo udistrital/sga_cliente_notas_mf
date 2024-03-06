@@ -50,6 +50,10 @@ export class PopUpManager {
         this._snackBar.open(message, action);
     }
 
+    public showInfoToast(message: string, action: any = null): void {
+        this._snackBar.open(message, action);
+    }
+
     public showConfirmAlert(text: string, title = this.translate.instant('GLOBAL.atencion')): Promise<any> {
         const options: any = {
             title: title,
