@@ -21,7 +21,7 @@ import { UserService } from 'src/data/services/users.service';
 export class ListNotasComponent implements OnInit, OnDestroy {
 
   //// loading animation ////
-  loading: boolean = false;
+  loading: boolean = true;
   
   EstadosRegistro: any
 

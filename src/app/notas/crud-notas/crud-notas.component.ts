@@ -15,6 +15,9 @@ import { RegistroNotaEstado } from 'src/data/models/registro-nota-estado';
 import html2canvas from 'html2canvas';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -64,9 +67,13 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   needCrearPorcentajes: boolean = false;
 
-  //// variables registro calificaciones estudiantes ///
-  settings: Object;
-  //dataSource: LocalDataSource;
+  dataSource: MatTableDataSource<any>;
+
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  displayedColumns: string[] = ['Codigo', 'Nombre', 'Apellido', 'CORTE_1', 'CORTE_2', 'EXAMEN', 'HABILIT', 'VARIOS', 'TOTAL'];
+  nombresColumnas = [];
 
   calificacionesGET: EstudiantesNotas[];
   calificacionesEstudiantesV2: EstudiantesNotas[] = [];
@@ -102,9 +109,17 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     public passDataService: RegistroNotasService,
     private router: Router,
   ) {
-    //this.dataSource = new LocalDataSource();
+    this.nombresColumnas["Codigo"] = "notas.codigo";
+    this.nombresColumnas["Nombre"] = "notas.nombre";
+    this.nombresColumnas["Apellido"] = "notas.apellido";
+    this.nombresColumnas["CORTE_1"] = "notas.corte1";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["CORTE_2"] = "notas.corte2";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["EXAMEN"] = "notas.examen";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["HABILIT"] = "notas.habilitacion";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["VARIOS"] = "notas.varios";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["TOTAL"] = "notas.total";//renderComponent: RenderDataComponent,
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.createTable();
+      this.cargarDatosTabla([]);
     })
   }
 
@@ -118,7 +133,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
     this.EstadosRegistro = JSON.parse(sessionStorage.getItem('EstadosRegistro'))
 
-    this.createTable();
+    this.cargarDatosTabla([]);
     try {
       await this.getObservaciones();
       await this.getDocenteAsignaturaInfo(this.dataReceived.Asignatura_id);
@@ -134,81 +149,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   }
 
-  createTable() {
-    this.settings = {
-      columns: {
-        Codigo: {
-          title: this.translate.instant('notas.codigo'),
-          editable: false,
-          width: '7%',
-          filter: false,
-        },
-        Nombre: {
-          title: this.translate.instant('notas.nombre'),
-          editable: false,
-          width: '14%',
-          filter: false,
-        },
-        Apellido: {
-          title: this.translate.instant('notas.apellido'),
-          editable: false,
-          width: '14%',
-          filter: false,
-        },
-        CORTE_1: {
-          title: this.translate.instant('notas.corte1'),
-          editable: false,
-          width: '15%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        },
-        CORTE_2: {
-          title: this.translate.instant('notas.corte2'),
-          editable: false,
-          width: '20%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        },
-        EXAMEN: {
-          title: this.translate.instant('notas.examen'),
-          editable: false,
-          width: '5%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        },
-        HABILIT: {
-          title: this.translate.instant('notas.habilitacion'),
-          editable: false,
-          width: '5%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        },
-        VARIOS: {
-          title: this.translate.instant('notas.varios'),
-          editable: false,
-          width: '15%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        },
-        TOTAL: {
-          title: this.translate.instant('notas.total'),
-          editable: false,
-          width: '5%',
-          filter: false,
-          type: 'custom',
-          //renderComponent: RenderDataComponent,
-        }
-      },
-      hideSubHeader: false,
-      mode: 'external',
-      actions: false,
-      noDataMessage: this.translate.instant('asignaturas.no_datos_notas')
-    };
+  cargarDatosTabla(datosCargados: any[]) {
+    this.dataSource = new MatTableDataSource(datosCargados);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   fillTable() {
@@ -437,7 +381,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
               resolve(dataPut)
               this.updateHeader();
               this.updatePercentsNotes();
-              //this.dataSource.load(this.calificacionesEstudiantesV2);
+              this.cargarDatosTabla(this.calificacionesEstudiantesV2);
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.fallo_porcentajes'));
             }
@@ -537,7 +481,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
     this.needCrearNotasEstudiantes = false;
 
-    //this.dataSource.load(this.calificacionesEstudiantesV2);
+    this.cargarDatosTabla(this.calificacionesEstudiantesV2);
   }
 
   formatNotasEstudiantesforTable() {
@@ -811,11 +755,11 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
           }
           this.formatNotasEstudiantesforTable();
           this.fillTable();
-          //this.dataSource.load(this.calificacionesEstudiantesV2); 
+          this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         }
       } else if (cerrar) {
         this.updateFooter();
-        //this.dataSource.load(this.calificacionesEstudiantesV2); 
+        this.cargarDatosTabla(this.calificacionesEstudiantesV2);
       }
     });
   }
@@ -825,7 +769,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios'),this.translate.instant('notas.captura_notas')).then(accion => {
       if(accion.value){
         this.fillTable();
-        //this.dataSource.load(this.calificacionesEstudiantesV2);
+        this.cargarDatosTabla(this.calificacionesEstudiantesV2);
       }
     });
   }
@@ -853,7 +797,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         }
         } else if (cerrar) {
           this.updateFooter();
-          //this.dataSource.load(this.calificacionesEstudiantesV2); 
+          this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         }
       });
     }
@@ -863,7 +807,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'),this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
       if(accion.value){
         this.fillTable();
-        //this.dataSource.load(this.calificacionesEstudiantesV2);
+        this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         this.loading = true;
         this.generatePdf("Exportar").then(()=>{
           this.loading = false;
@@ -878,7 +822,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'),this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
       if(accion.value){
         this.fillTable();
-        //this.dataSource.load(this.calificacionesEstudiantesV2);
+        this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         this.loading = true;
         this.generatePdf("Imprimir").then(()=>{
           this.loading = false;

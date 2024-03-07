@@ -50,11 +50,13 @@ import { UserService } from 'src/data/services/users.service';
 import { RegistroNotasService } from 'src/data/services/registro_notas.service';
 import { TimeService } from 'src/data/services/time.service';
 import { NotePercentageComponent } from './note-percentage/note-percentage.component';
+import { RenderDataComponent } from './render-data/render-data.component';
 
 @NgModule({
   declarations: [
     routedComponents,
-    NotePercentageComponent
+    NotePercentageComponent,
+    RenderDataComponent
   ],
   imports: [
     CommonModule,
@@ -101,7 +103,8 @@ import { NotePercentageComponent } from './note-percentage/note-percentage.compo
   ],
   exports: [
     NotasComponent,
-    NotePercentageComponent
+    NotePercentageComponent,
+    RenderDataComponent
   ],
   providers: [
     PopUpManager,
