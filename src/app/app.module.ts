@@ -82,7 +82,7 @@ export function createTranslateLoader(http: HttpClient) {
     MatSortModule,
     MatTableModule,
     MatTabsModule,
-    MatTooltipModule,
+    MatTooltipModule
   ],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },

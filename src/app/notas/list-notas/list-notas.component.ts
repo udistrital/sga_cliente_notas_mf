@@ -137,7 +137,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
         }
 
         this.dataSend.EstadoRegistro_porExtemporaneo = Number(hayExtemporaneo)
-        this.router.navigate([`pages/notas/crud-notas`])
+        this.router.navigate([`/crud-notas`])
       } else {
         this.dataSend.EstadoRegistro_porExtemporaneo = 0;
         this.bringActivities(periodo);
@@ -264,19 +264,19 @@ export class ListNotasComponent implements OnInit, OnDestroy {
       if (this.validado.corte1.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Corte1;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_corte1')); //"Esta ingresando a fechas 1 corte"
-        this.router.navigate([`pages/notas/crud-notas`])
+        this.router.navigate([`/crud-notas`])
       } else if(this.validado.corte2.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Corte2;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_corte2')); //"Esta ingresando a fechas 2 corte"
-        this.router.navigate([`pages/notas/crud-notas`])
+        this.router.navigate([`/crud-notas`])
       } else if(this.validado.examen.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Examen;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_examen')); //"Esta ingresando a fechas examen"
-        this.router.navigate([`pages/notas/crud-notas`])
+        this.router.navigate([`/crud-notas`])
       } else if(this.validado.habilit.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Habilit;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_habilit')); //"Esta ingresando a fechas habilit"
-        this.router.navigate([`pages/notas/crud-notas`])
+        this.router.navigate([`/crud-notas`])
       } else {
         this.popUpManager.showErrorAlert(this.translate.instant('notas.fuera_fechas')); //"fuera de fechas"
       }

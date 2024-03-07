@@ -5,6 +5,7 @@ import { NotasComponent } from './notas.component';
 import { DefinicionCortesComponent } from './definicion-cortes/definicion-cortes.component';
 import { ListNotasComponent } from './list-notas/list-notas.component';
 import { CapturaNotasComponent } from './captura-notas/captura-notas.component';
+import { CrudNotasComponent } from './crud-notas/crud-notas.component';
 
 const routes: Routes = [{
     path: '',
@@ -24,6 +25,11 @@ const routes: Routes = [{
             path: 'captura-notas',
             component: CapturaNotasComponent,
 //            canActivate: [AuthGuard],
+        },
+        {
+            path: 'crud-notas',
+            component: CrudNotasComponent,
+//          canActivate: [AuthGuard],
         }
     ],
 }];
@@ -42,5 +48,6 @@ export const routedComponents = [
     NotasComponent,
     DefinicionCortesComponent,
     ListNotasComponent,
-    CapturaNotasComponent
+    CapturaNotasComponent,
+    CrudNotasComponent
 ]

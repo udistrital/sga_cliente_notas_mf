@@ -49,10 +49,12 @@ import { ParametrosService } from 'src/data/services/parametros.service';
 import { UserService } from 'src/data/services/users.service';
 import { RegistroNotasService } from 'src/data/services/registro_notas.service';
 import { TimeService } from 'src/data/services/time.service';
+import { NotePercentageComponent } from './note-percentage/note-percentage.component';
 
 @NgModule({
   declarations: [
     routedComponents,
+    NotePercentageComponent
   ],
   imports: [
     CommonModule,
@@ -95,10 +97,11 @@ import { TimeService } from 'src/data/services/time.service';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    NotasRoutingComponent,
+    NotasRoutingComponent
   ],
   exports: [
-    NotasComponent
+    NotasComponent,
+    NotePercentageComponent
   ],
   providers: [
     PopUpManager,

@@ -143,6 +143,7 @@
         "title_finalizar": "Generation of final grades",
         "info_finalizar": "About to finish the registration of grades, please fill in the fields of absences and observations if you haven't already done so. The foregoing in order to evaluate cases of subject losses due to absences.",
         "pregunta_finalizar_registros": "Do you want to end the qualification process? You can press cancel to save changes and review the final notes, if you have already made the pertinent revisions, press accept to conclude the process.",
-        "info_guardado_necesario": "Teacher: Every time you make changes to percentages, it is recommended that you save the grade table again to ensure the change in percentages in the students' grades."
+        "info_guardado_necesario": "Teacher: Every time you make changes to percentages, it is recommended that you save the grade table again to ensure the change in percentages in the students' grades.",
+        "modificacion_extemporanea_Corte1": "You are entering out-of-date notes for cutoff 1."
     }
 }

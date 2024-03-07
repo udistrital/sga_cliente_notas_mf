@@ -27,6 +27,11 @@ fieldset {
   color: white !important;
 }
 
+.boton-primary[disabled] {
+  color: rgba(0, 0, 0, .26) !important;
+  background-color: rgba(0, 0, 0, .12) !important;
+}
+
 .boton-secondary {
   background-color: #d9534f !important;
   color: white !important;
