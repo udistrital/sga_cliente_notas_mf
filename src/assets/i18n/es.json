@@ -148,7 +148,8 @@
         "info_finalizar": "A punto de finalizar el registro de notas, por favor diligencie campos de fallas y observaciones si aún no lo ha hecho. Lo anterior con el fin de evaluar casos de pérdidas de asignatura por fallas.",
         "pregunta_finalizar_registros": "¿Desea dar por finalizado el proceso de calificaciones? Puede presionar cancelar para guardar cambios y revisar las notas definitivas, si ya hizo las revisiones pertinentes presione aceptar para concluir el proceso.",
         "info_guardado_necesario": "Docente: Cada vez que realice cambios en porcentajes es recomendable que guarde nuevamente la tabla de calificaciones para asegurar el cambio de los porcentajes en las notas de los estudiantes.",
-        "modificacion_extemporanea_Corte1": "Esta ingresando notas extemporaneas para el corte 1"
+        "modificacion_extemporanea_Corte1": "Esta ingresando notas extemporaneas para el corte 1",
+        "modificacion_extemporanea_Corte2": "Esta ingresando notas extemporaneas para el corte 2"
     },
     "asignaturas": {
         "no_datos_notas": "No se encuentran datos para la asignatura"

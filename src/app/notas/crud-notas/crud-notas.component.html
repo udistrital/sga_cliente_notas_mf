@@ -1,11 +1,11 @@
 <mat-card>
-    <mat-card-header>
-        <div class="row" align="center">
-            <div class="col">
-                {{ 'notas.captura_notas_parciales' | translate }}
-            </div>
+    <br>
+    <div class="row" align="center">
+        <div class="col">
+            <strong>{{ 'notas.captura_notas_parciales' | translate }}</strong>
         </div>
-    </mat-card-header>
+    </div>
+    <hr>
     <mat-card-content>
         <div id="HtmlPdf" #HtmlPdf>
             <fieldset [ngClass]="{'fieldseter':true}">
@@ -174,8 +174,12 @@
                                 (mouseover)="hoverIndex = i"
                                 (mouseout)="hoverIndex = null">
 
-                                <ng-container>
+                                <ng-container *ngIf="!actionColumns?.includes(columna)">
                                     {{ fila[columna] }}
+                                </ng-container>
+                                <ng-container *ngIf="actionColumns?.includes(columna)">
+                                    <render-data [value]="fila[columna]">
+                                    </render-data>
                                 </ng-container>
                             </td>
                         </ng-container>

@@ -74,6 +74,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['Codigo', 'Nombre', 'Apellido', 'CORTE_1', 'CORTE_2', 'EXAMEN', 'HABILIT', 'VARIOS', 'TOTAL'];
   nombresColumnas = [];
+  actionColumns: string[] = ['CORTE_1', 'CORTE_2', 'EXAMEN', 'HABILIT', 'VARIOS', 'TOTAL'];
 
   calificacionesGET: EstudiantesNotas[];
   calificacionesEstudiantesV2: EstudiantesNotas[] = [];
@@ -112,12 +113,12 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.nombresColumnas["Codigo"] = "notas.codigo";
     this.nombresColumnas["Nombre"] = "notas.nombre";
     this.nombresColumnas["Apellido"] = "notas.apellido";
-    this.nombresColumnas["CORTE_1"] = "notas.corte1";//renderComponent: RenderDataComponent,
-    this.nombresColumnas["CORTE_2"] = "notas.corte2";//renderComponent: RenderDataComponent,
-    this.nombresColumnas["EXAMEN"] = "notas.examen";//renderComponent: RenderDataComponent,
-    this.nombresColumnas["HABILIT"] = "notas.habilitacion";//renderComponent: RenderDataComponent,
-    this.nombresColumnas["VARIOS"] = "notas.varios";//renderComponent: RenderDataComponent,
-    this.nombresColumnas["TOTAL"] = "notas.total";//renderComponent: RenderDataComponent,
+    this.nombresColumnas["CORTE_1"] = "notas.corte1";
+    this.nombresColumnas["CORTE_2"] = "notas.corte2";
+    this.nombresColumnas["EXAMEN"] = "notas.examen";
+    this.nombresColumnas["HABILIT"] = "notas.habilitacion";
+    this.nombresColumnas["VARIOS"] = "notas.varios";
+    this.nombresColumnas["TOTAL"] = "notas.total";
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.cargarDatosTabla([]);
     })

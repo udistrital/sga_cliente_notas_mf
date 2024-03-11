@@ -36,7 +36,7 @@ export class RenderDataComponent implements OnInit, OnDestroy {
     this.canEdit = this.value.canEdit ? this.value.canEdit : false;
     this.fields = this.value.fields ? this.value.fields : [];
 
-    this.forClose = this.value.forClose ? this.value.forClose : false;
+    this.forClose = this.value?.forClose ? this.value.forClose : false;
   }
 
   ngOnInit() {
@@ -83,7 +83,6 @@ export class RenderDataComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //console.log("borrando compoente..")
     this.subs.unsubscribe();
   }
 
