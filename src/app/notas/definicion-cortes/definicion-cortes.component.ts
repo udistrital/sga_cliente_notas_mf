@@ -6,7 +6,8 @@ import { PopUpManager } from 'src/app/managers/popup_manager';
 import { NivelFormacion } from 'src/data/models/nivel_formacion';
 import { EventoService } from 'src/data/services/evento.service';
 import { ProyectoAcademicoService } from 'src/data/services/proyecto_academico.service';
-import { SgaMidService } from 'src/data/services/sga_mid.service';
+import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
+import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 
 @Component({
   selector: 'definicion-cortes',
@@ -33,7 +34,8 @@ export class DefinicionCortesComponent implements OnInit {
 
   constructor(
     private proyectoService: ProyectoAcademicoService,
-    private sgaMidService: SgaMidService,
+    private sgaMidNotasService: SgaMidNotasService,
+    private sgaMidCalendarioService: SgaMidCalendarioService,
     private eventoService: EventoService,
     private popUpManager: PopUpManager,
     private translate: TranslateService
@@ -81,12 +83,12 @@ export class DefinicionCortesComponent implements OnInit {
     this.settingDates.disable();
     if (this.selectedLevel.value !== '') {
       this.loading = true;
-      this.sgaMidService.get('calendario_academico?limit=0').subscribe(
+      this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
         (response: any) => {
-          if (response !== null && (response.Response.Code == '404' || response.Response.Code == '400')) {
+          if (response !== null && (response.status == '404' || response.status == '400')) {
             this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
           } else {
-            this.periodos = response.Response.Body[1].filter(periodo => periodo.Nivel === this.selectedLevel.value && periodo.Activo === true);
+            this.periodos = response.data.filter(periodo => periodo.Nivel === this.selectedLevel.value && periodo.Activo === true);
             if (this.periodos === null) {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calendario_nivel'));//"no hay calendarios para este nivel o no se encuentran activos"
             }
@@ -109,12 +111,12 @@ export class DefinicionCortesComponent implements OnInit {
     if (this.selectedPeriod.value !== '') {
       this.loading = true;
       this.proceso = undefined;
-      this.sgaMidService.get('calendario_academico/' + this.selectedPeriod.value).subscribe(
+      this.sgaMidCalendarioService.get('calendario-academico/' + this.selectedPeriod.value).subscribe(
         (response: any) => {
-          if (response === null || !response.Success) {
+          if (response === null || !response.success) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calendario_periodo'));//"No se encuentra calendario para periodo"
           } else {
-            this.proceso = response.Data[0].proceso != null ? response.Data[0].proceso.filter(proceso => this.existe(proceso.Proceso, ["calificaciones"]))[0] : undefined;
+            this.proceso = response.data[0].proceso != null ? response.data[0].proceso.filter(proceso => this.existe(proceso.Proceso, ["calificaciones"]))[0] : undefined;
             if (this.proceso === undefined) {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.no_proceso_calificaciones'));//"No hay proceso de calificaciones"
             } else {

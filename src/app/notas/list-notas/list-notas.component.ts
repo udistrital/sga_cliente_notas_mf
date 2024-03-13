@@ -9,7 +9,8 @@ import { PopUpManager } from 'src/app/managers/popup_manager';
 import { RegistroNotasDocente } from 'src/data/models/registro-notas-docente';
 import { ParametrosService } from 'src/data/services/parametros.service';
 import { DataAsignatura, RegistroNotasService } from 'src/data/services/registro_notas.service';
-import { SgaMidService } from 'src/data/services/sga_mid.service';
+import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
+import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 import { TimeService } from 'src/data/services/time.service';
 import { UserService } from 'src/data/services/users.service';
 
@@ -66,7 +67,8 @@ export class ListNotasComponent implements OnInit, OnDestroy {
   constructor(
     private parametrosService: ParametrosService,
     private router: Router,
-    private sgaMidService: SgaMidService,
+    private sgaMidNotasService: SgaMidNotasService,
+    private sgaMidCalendarioService: SgaMidCalendarioService,
     private translate: TranslateService,
     private popUpManager: PopUpManager,
     private userService: UserService,
@@ -156,7 +158,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     var docenteId = this.userService.getPersonaId();
 
     this.loading = true;
-    this.sgaMidService.get('notas/EspaciosAcademicos/' + docenteId).subscribe(
+    this.sgaMidNotasService.get('docentes/' + docenteId + '/espacios-academicos').subscribe(
       (response: any) => {
         if (response !== null && response.Status == '404') {
           this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_espacios_academicos'));
@@ -183,12 +185,12 @@ export class ListNotasComponent implements OnInit, OnDestroy {
   bringActivities(periodo) {
     this.loading = true;
     this.proceso = undefined;
-    this.sgaMidService.get('calendario_academico/'+periodo).subscribe(
+    this.sgaMidCalendarioService.get('calendario-academico/'+periodo).subscribe(
       (response: any) => {
-        if (response !== null && response.Status == '404') {
+        if (response !== null && response.status == '404') {
           this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calendario'));
         } else {
-          this.proceso = response.Data[0].proceso.filter(proceso => this.existe(proceso.Proceso,["calificaciones"]))[0];
+          this.proceso = response.data[0].proceso.filter(proceso => this.existe(proceso.Proceso,["calificaciones"]))[0];
           if (this.proceso === undefined) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.no_proceso_calificaciones'));
           } else{
@@ -287,7 +289,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
 
   checkModificacionExtemporanea(asignatura) {
     return new Promise((resolve, reject) => {
-      this.sgaMidService.get('notas/ModificacionExtemporanea/' + asignatura).subscribe(
+      this.sgaMidNotasService.get('asignaturas/' + asignatura + '/modificacion-extemporanea').subscribe(
         (response: any) => {
           if (response !== null && response.Status == '200') {
             var estadoRegistro = 0;

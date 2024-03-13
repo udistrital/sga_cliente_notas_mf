@@ -7,7 +7,7 @@ import { DocenteAsignatura } from 'src/data/models/docente-asignatura';
 import { PorcentajesAsignatura } from 'src/data/models/porcentajes-asignatura';
 import { EstudiantesNotas, setFooter, setHeader } from 'src/data/models/estudiantes-notas';
 import { ParametrosService } from 'src/data/services/parametros.service';
-import { SgaMidService } from 'src/data/services/sga_mid.service';
+import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 import { PopUpManager } from 'src/app/managers/popup_manager';
 import { Fields } from 'src/data/models/fields';
 import { PropuestasPorcentajes } from 'src/data/models/propuestas-porcentajes';
@@ -104,7 +104,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   constructor(
     private parametrosService: ParametrosService,
-    private sgaMidService: SgaMidService,
+    private sgaMidNotasService: SgaMidNotasService,
     private translate: TranslateService,
     private popUpManager: PopUpManager,
     public passDataService: RegistroNotasService,
@@ -199,7 +199,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   getDocenteAsignaturaInfo(asignaturaId) {
     return new Promise((resolve, reject) => {
-      this.sgaMidService.get('notas/InfoDocenteAsignatura/' + asignaturaId).subscribe(
+      this.sgaMidNotasService.get('asignaturas/' + asignaturaId + '/info-docente').subscribe(
         (response: any) => {
           if (response !== null && response.Status == '404') {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_informacion_docente_asignatura'));
@@ -219,7 +219,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   getPorcentajes(asignaturaId, periodoId) {
     return new Promise((resolve,reject) => {
-      this.sgaMidService.get('notas/PorcentajeAsignatura/' + asignaturaId + '/' + periodoId).subscribe(
+      this.sgaMidNotasService.get('/asignaturas/' + asignaturaId + '/periodos/' + periodoId + '/porcentajes').subscribe(
         (response: any) => {
           if (response !== null && response.Status == '404') {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_info_porcentajes'));
@@ -370,7 +370,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       }
 
       if (dataPut != undefined) {
-        this.sgaMidService.put('notas/PorcentajeAsignatura', dataPut).subscribe(
+        this.sgaMidNotasService.put('asignaturas/porcentajes', dataPut).subscribe(
           (response: any) => {
             if (response !== null && response.Status == '200') {
               if (this.needCrearPorcentajes){
@@ -425,7 +425,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   getNotasEstudiantes(asignaturaId, periodoId) {
     return new Promise((resolve, reject) => {
-      this.sgaMidService.get('notas/CapturaNotas/' + asignaturaId + '/' + periodoId).subscribe(
+      this.sgaMidNotasService.get('notas/asignaturas/' + asignaturaId + '/periodos/' + periodoId + '/estudiantes').subscribe(
         (response: any) => {
           if (response !== null && response.Status == '404') {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calificaciones_estudiantes'));
@@ -673,7 +673,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       var dataPut = this.prepareNotasEstudiantesforPut(estado_registro, accion);
 
       if (dataPut != undefined) {
-        this.sgaMidService.put('notas/CapturaNotas', dataPut).subscribe(
+        this.sgaMidNotasService.put('notas/asignaturas/estudiantes', dataPut).subscribe(
           (response: any) => {
             if (response !== null && response.Status == '200') {
               if (this.needCrearNotasEstudiantes){

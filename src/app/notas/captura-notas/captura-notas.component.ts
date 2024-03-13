@@ -4,7 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { PopUpManager } from 'src/app/managers/popup_manager';
-import { SgaMidService } from 'src/data/services/sga_mid.service';
+import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
+import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 
 @Component({
   selector: 'captura-notas',
@@ -24,7 +25,8 @@ export class CapturaNotasComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private sgaMidService: SgaMidService,
+    private sgaMidNotasService: SgaMidNotasService,
+    private sgaMidCalendarioService: SgaMidCalendarioService,
     private popUpManager: PopUpManager,
     ) {
     this.nombresColumnas["Identificacion"] = "notas.identificacion";
@@ -54,7 +56,7 @@ export class CapturaNotasComponent implements OnInit {
   }
 
   filterPeriodo(periodo) {
-    this.sgaMidService.get('notas/EstadosRegistros/' + periodo).subscribe(
+    this.sgaMidNotasService.get('periodos/' + periodo + '/estados-registros').subscribe(
       response => {
         if (response !== null && response.Status == '200') {
           this.cargarDatosTabla(response.Data) 
@@ -75,12 +77,12 @@ export class CapturaNotasComponent implements OnInit {
   }
   
   periodosActivos() {
-    this.sgaMidService.get('calendario_academico?limit=0').subscribe(
+    this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
       (response: any) => {
-        if (response !== null && (response.Response.Code == '404' || response.Response.Code == '400')) {
+        if (response !== null && (response.status == '404' || response.status == '400')) {
           this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
         } else {
-          this.periodos = response.Response.Body[1].filter(periodo => periodo.Activo === true);
+          this.periodos = response.data.filter(periodo => periodo.Activo === true);
           if (this.periodos === null) {
             this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
           }

@@ -41,7 +41,7 @@ import { MatTableModule } from '@angular/material/table';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotasRoutingComponent, routedComponents } from './notas-routing.module';
 import { NotasComponent } from './notas.component';
-import { SgaMidService } from 'src/data/services/sga_mid.service';
+import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 import { EventoService } from 'src/data/services/evento.service';
 import { ProyectoAcademicoService } from 'src/data/services/proyecto_academico.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -51,6 +51,7 @@ import { RegistroNotasService } from 'src/data/services/registro_notas.service';
 import { TimeService } from 'src/data/services/time.service';
 import { NotePercentageComponent } from './note-percentage/note-percentage.component';
 import { RenderDataComponent } from './render-data/render-data.component';
+import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
 
 @NgModule({
   declarations: [
@@ -108,7 +109,8 @@ import { RenderDataComponent } from './render-data/render-data.component';
   ],
   providers: [
     PopUpManager,
-    SgaMidService,
+    SgaMidNotasService,
+    SgaMidCalendarioService,
     EventoService,
     ProyectoAcademicoService,
     UserService,
