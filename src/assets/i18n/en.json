@@ -26,7 +26,10 @@
         "adjuntar": "Attach",
         "info_estado": "Registration Status",
         "cerrar_visualizador": "Close viewer",
-        "click_aqui": "Click here"
+        "click_aqui": "Click here",
+        "cargar": "Load",
+        "documento_identificacion": "Identification document",
+        "info_persona": "Personal information"
     },
     "ERROR": {
         "general": "The request could not be satisfied",
