@@ -25,7 +25,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   templateUrl: './crud-notas.component.html',
   styleUrls: ['./crud-notas.component.scss']
 })
-
 export class CrudNotasComponent implements OnInit, OnDestroy {
 
   //// datos de entrada para cargar componente ////
@@ -48,15 +47,15 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     Creditos: null,
     Periodo: ""
   };
-  
+
   //// variables relacionadas a porcentajes asignatura ////
   totalPercentage = 0;
-  parcialPercentage = [0, 0, 0]
+  parcialPercentage = [0, 0, 0];
 
   cajaPorcentajesVer: boolean = false;
 
   modeloPorcentajes: PorcentajesAsignatura[];
-  
+
   Corte1: PorcentajesAsignatura = null;
   Corte2: PorcentajesAsignatura = null;
   Examen: PorcentajesAsignatura = null;
@@ -79,9 +78,9 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
   calificacionesGET: EstudiantesNotas[];
   calificacionesEstudiantesV2: EstudiantesNotas[] = [];
 
-  EstadosRegistro: any
+  EstadosRegistro: any;
 
-  ObservacionesNotas: any
+  ObservacionesNotas: any;
 
   needCrearNotasEstudiantes: boolean = false;
 
@@ -121,18 +120,17 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.nombresColumnas["TOTAL"] = "notas.total";
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
       this.cargarDatosTabla([]);
-    })
+    });
   }
 
-  useLanguage(language: string) {
+  useLanguage(language: string): void {
     this.translate.use(language);
   }
 
   async ngOnInit() {
-
     this.dataReceived = this.passDataService.getData();
 
-    this.EstadosRegistro = JSON.parse(sessionStorage.getItem('EstadosRegistro'))
+    this.EstadosRegistro = JSON.parse(sessionStorage.getItem('EstadosRegistro'));
 
     this.cargarDatosTabla([]);
     try {
@@ -143,39 +141,38 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       await this.getNotasEstudiantes(this.dataReceived.Asignatura_id, this.dataReceived.Periodo_id);
       await this.checkingNotasEstudiantes();
     } catch (error) {
-      console.log("ngOnInit: ",error)
+      console.log("ngOnInit: ", error);
       this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
       this.errorgen = true;
     }
-
   }
 
-  cargarDatosTabla(datosCargados: any[]) {
+  cargarDatosTabla(datosCargados: any[]): void {
     this.dataSource = new MatTableDataSource(datosCargados);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  fillTable() {
+  fillTable(): void {
     this.calificacionesEstudiantesV2 = [];
     this.calificacionesEstudiantesV2[0] = setHeader();
-    let unlinkedCopy = JSON.parse(JSON.stringify(this.calificacionesGET))
+    let unlinkedCopy = JSON.parse(JSON.stringify(this.calificacionesGET));
     this.calificacionesEstudiantesV2 = this.calificacionesEstudiantesV2.concat(unlinkedCopy);
     this.calificacionesEstudiantesV2.push(setFooter());
     this.updateHeader();
     this.updateFooter();
   }
 
-  updateHeader() {
+  updateHeader(): void {
     this.calificacionesEstudiantesV2[0].CORTE_1.fields = this.Corte1.fields.field;
     this.calificacionesEstudiantesV2[0].CORTE_2.fields = this.Corte2.fields.field;
     this.calificacionesEstudiantesV2[0].EXAMEN.fields = this.Examen.fields.field;
     this.calificacionesEstudiantesV2[0].HABILIT.fields = this.Habilit.fields.field;
   }
 
-  updatePercentsNotes(){
+  updatePercentsNotes(): void {
     let max = this.calificacionesEstudiantesV2.length;
-    for(let i = 1; i < max-1; i++){
+    for(let i = 1; i < max-1; i++) {
       this.calificacionesEstudiantesV2[i].CORTE_1.fields.forEach((f: Fields) => {
         f.perc = this.Corte1.fields.field.find(p => p.name == f.name).perc;
       });
@@ -185,7 +182,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateFooter() {
+  updateFooter(): void {
     let end = this.calificacionesEstudiantesV2.length;
     this.calificacionesEstudiantesV2[end - 1].CORTE_1.canEdit = ((this.Corte1.editporTiempo || this.Corte1.editExtemporaneo) && !this.Corte1.finalizado);
     this.calificacionesEstudiantesV2[end - 1].CORTE_1.fields[0].value = this.Corte1.finalizado;
@@ -197,53 +194,52 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.calificacionesEstudiantesV2[end - 1].HABILIT.fields[0].value = this.Habilit.finalizado;
   }
 
-  getDocenteAsignaturaInfo(asignaturaId) {
+  getDocenteAsignaturaInfo(asignaturaId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.sgaMidNotasService.get('asignaturas/' + asignaturaId + '/info-docente').subscribe(
         (response: any) => {
-          if (response !== null && response.Status == '404') {
+          if (response !== null && response.status == '404') {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_informacion_docente_asignatura'));
           } else {
-            this.dataDocente = response.Data[0];
+            this.dataDocente = response.data[0];
           }
-          resolve(this.dataDocente)
+          resolve(this.dataDocente);
         },
         error => {
-          console.log("getDocente...: ",error)
+          console.log("getDocente...: ", error);
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          reject(error)
+          reject(error);
         }
       );
     });
   }
 
-  getPorcentajes(asignaturaId, periodoId) {
+  getPorcentajes(asignaturaId: string, periodoId: string | number): Promise<any> {
     return new Promise((resolve,reject) => {
       this.sgaMidNotasService.get('/asignaturas/' + asignaturaId + '/periodos/' + periodoId + '/porcentajes').subscribe(
         (response: any) => {
-          if (response !== null && response.Status == '404') {
+          if (response !== null && response.status == '404') {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_info_porcentajes'));
           } else {
-            this.modeloPorcentajes = response.Data;
+            this.modeloPorcentajes = response.data;
           }
-          resolve(this.modeloPorcentajes)
+          resolve(this.modeloPorcentajes);
         },
         error => {
-          console.log("getPorcentajes: ",error)
+          console.log("getPorcentajes: ", error);
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          reject(error)
+          reject(error);
         }
       );
     });
   }
 
   async checkingPorcentajes() {
-
     this.needCrearPorcentajes = false;
 
     this.modeloPorcentajes.forEach((porcentaje: PorcentajesAsignatura) => {
       if (porcentaje.id == "") {
-        porcentaje.fields = this.manageEmptyPorcentaje(porcentaje.estadoRegistro)
+        porcentaje.fields = this.manageEmptyPorcentaje(porcentaje.estadoRegistro);
         this.needCrearPorcentajes = true;
       }
     });
@@ -251,31 +247,27 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.estructurarPorcentajes();
 
     if (this.needCrearPorcentajes) {
-
       try {
         await this.putPorcentajes("Crear");
         await this.getPorcentajes(this.dataReceived.Asignatura_id, this.dataReceived.Periodo_id);
         await this.checkingPorcentajes();
-
       } catch (error) {
-        console.log("checkPerc...: ",error)
+        console.log("checkPerc...: ", error);
       }
-
     }
 
     this.needCrearPorcentajes = false;
 
-    if(this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado){
-      this.popUpManager.showAlert(this.translate.instant('notas.title_finalizar'),this.translate.instant('notas.info_finalizar'))
+    if (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado) {
+      this.popUpManager.showAlert(this.translate.instant('notas.title_finalizar'), this.translate.instant('notas.info_finalizar'));
       this.definitiva = true;
     }
     this.finalizado = this.Definitiva.finalizado
 
     this.cajaPorcentajesVer = true;
-
   }
 
-  manageEmptyPorcentaje(reg) {
+  manageEmptyPorcentaje(reg: any): any {
     let estructura;
     switch (reg) {
       case this.EstadosRegistro.Corte1:
@@ -298,11 +290,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         break;
     }
 
-    return estructura
+    return estructura;
   }
 
-  estructurarPorcentajes() {
-
+  estructurarPorcentajes(): void {
     this.modeloPorcentajes.forEach((porcentajes: PorcentajesAsignatura) => {
       if (porcentajes.estadoRegistro == this.EstadosRegistro.Corte1) {
         porcentajes.editporTiempo = (this.dataReceived.EstadoRegistro_porTiempo == porcentajes.estadoRegistro);
@@ -329,11 +320,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         porcentajes.editExtemporaneo = (this.dataReceived.EstadoRegistro_porExtemporaneo == porcentajes.estadoRegistro);
         this.Definitiva = porcentajes
       }
-    })
-
+    });
   }
 
-  putPorcentajes(accion: string) {
+  putPorcentajes(accion: string): Promise<any> {
     return new Promise((resolve,reject) => {
 
       let dataPut = undefined;
@@ -372,14 +362,14 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       if (dataPut != undefined) {
         this.sgaMidNotasService.put('asignaturas/porcentajes', dataPut).subscribe(
           (response: any) => {
-            if (response !== null && response.Status == '200') {
-              if (this.needCrearPorcentajes){
-                this.popUpManager.showInfoToast(this.translate.instant('notas.porcentajes_creados'),this.timeinfo)
-                this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.porcentajes_creados_info'))
+            if (response !== null && response.status == '200') {
+              if (this.needCrearPorcentajes) {
+                this.popUpManager.showInfoToast(this.translate.instant('notas.porcentajes_creados'));
+                this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.porcentajes_creados_info'));
               } else {
-                this.popUpManager.showSuccessAlert(this.translate.instant('notas.porcentajes_actualizados'))
+                this.popUpManager.showSuccessAlert(this.translate.instant('notas.porcentajes_actualizados'));
               }
-              resolve(dataPut)
+              resolve(dataPut);
               this.updateHeader();
               this.updatePercentsNotes();
               this.cargarDatosTabla(this.calificacionesEstudiantesV2);
@@ -388,62 +378,61 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
             }
           },
           error => {
-            console.log("putPerc...: ",error)
+            console.log("putPerc...: ", error);
             this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-            reject(error)
+            reject(error);
           }
         );
       }
-
     });
   }
 
-  save_P(){
-    this.popUpManager.showConfirmAlert(this.translate.instant('notas.guardar_cambios_porcentajes'),this.translate.instant('notas.captura_porcentajes')).then(accion => {
-      if(accion.value){
+  save_P(): void {
+    this.popUpManager.showConfirmAlert(this.translate.instant('notas.guardar_cambios_porcentajes'), this.translate.instant('notas.captura_porcentajes')).then(accion => {
+      if (accion.value) {
         this.putPorcentajes("Guardar");
       }
     });
   }
 
-  getObservaciones() {
+  getObservaciones(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('parametro?query=TipoParametroId.Id:55&fields=Id,CodigoAbreviacion,Nombre&limit=0').subscribe(
         response => {
           if (response !== null && response.Status == '200') {
-            this.ObservacionesNotas = response["Data"]
+            this.ObservacionesNotas = response["Data"];
             sessionStorage.setItem('ObservacionesNotas', JSON.stringify(this.ObservacionesNotas));
-            resolve(this.ObservacionesNotas)
+            resolve(this.ObservacionesNotas);
           }
         },
-        error => {
-          reject("Fail_OBS")
-        }
-      )
-    });
-  }
-
-  getNotasEstudiantes(asignaturaId, periodoId) {
-    return new Promise((resolve, reject) => {
-      this.sgaMidNotasService.get('notas/asignaturas/' + asignaturaId + '/periodos/' + periodoId + '/estudiantes').subscribe(
-        (response: any) => {
-          if (response !== null && response.Status == '404') {
-            this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calificaciones_estudiantes'));
-          } else {
-            this.calificacionesGET = response.Data.calificaciones_estudiantes;
-          }
-          resolve(this.calificacionesGET)
-        },
-        error => {
-          console.log("getNotasEst...: ",error)
-          this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          reject(error)
+        () => {
+          reject("Fail_OBS");
         }
       );
     });
   }
 
-  async checkingNotasEstudiantes() {
+  getNotasEstudiantes(asignaturaId: string, periodoId: string | number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.sgaMidNotasService.get('notas/asignaturas/' + asignaturaId + '/periodos/' + periodoId + '/estudiantes').subscribe(
+        (response: any) => {
+          if (response !== null && response.status == '404') {
+            this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calificaciones_estudiantes'));
+          } else {
+            this.calificacionesGET = response.data.calificaciones_estudiantes;
+          }
+          resolve(this.calificacionesGET);
+        },
+        error => {
+          console.log("getNotasEst...: ", error);
+          this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
+          reject(error);
+        }
+      );
+    });
+  }
+
+  async checkingNotasEstudiantes(): Promise<any> {
 
     this.needCrearNotasEstudiantes = false;
 
@@ -469,14 +458,12 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.fillTable();
 
     if (this.needCrearNotasEstudiantes) {
-
       try {
         await this.putNotasEstudiantes();
         await this.getNotasEstudiantes(this.dataReceived.Asignatura_id, this.dataReceived.Periodo_id);
         await this.checkingNotasEstudiantes();
-
       } catch (error) {
-        console.log("checkNotasEst...: ",error)
+        console.log("checkNotasEst...: ", error);
       }
     }
 
@@ -485,8 +472,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.cargarDatosTabla(this.calificacionesEstudiantesV2);
   }
 
-  formatNotasEstudiantesforTable() {
-
+  formatNotasEstudiantesforTable(): void {
     this.calificacionesGET.forEach((est: EstudiantesNotas) => {
       if (est.Id > 0) {
         est.CORTE_1 = { fields: [] };
@@ -533,26 +519,24 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
           Observacion = est.Habilit.data.observacion_nota_id;
         }
 
-        var inDef = (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado)
+        var inDef = (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado);
 
-        if(inDef){
+        if (inDef) {
           fallasSuma = est.Corte1.data.fallas + est.Corte2.data.fallas + est.Examen.data.fallas + est.Habilit.data.fallas;
           Observacion = est.Definitiva.data.observacion_nota_id;
         }
-        
+
         est.VARIOS.fields = [{ name: "Fallas", value: fallasSuma, forceEdit: !this.Definitiva.finalizado }, { name: "ACU", value: est.Acumulado }, { name: "OBS", value: Observacion, forceEdit: !this.Definitiva.finalizado }];
         est.VARIOS.needEdit = true; est.VARIOS.canEdit = false;
         est.VARIOS["fallasPrev"] = <number>fallasSuma-<number>fallas;
 
         est.TOTAL.fields = est.Definitiva.data.valor_nota
         est.TOTAL.needEdit = true;
-
       }
     });
-
   }
 
-  manageEmptyNotaEstudiante(regNota: RegistroNotaEstado, perc: PorcentajesAsignatura, unique: boolean) {
+  manageEmptyNotaEstudiante(regNota: RegistroNotaEstado, perc: PorcentajesAsignatura, unique: boolean): any {
     if (regNota.id == "") {
       if (unique) {
         return { name: perc.fields.field[0].name, perc: perc.fields.field[0].perc, value: (perc.fields.field[0].value ? perc.fields.field[0].value : 0) }
@@ -561,15 +545,14 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       }
     } else {
       if (unique) {
-        return regNota.data.valor_nota[0]
+        return regNota.data.valor_nota[0];
       } else {
-        return regNota.data.valor_nota
+        return regNota.data.valor_nota;
       }
     }
   }
 
-  prepareNotasEstudiantesforPut(estado_registro: number, accion: string) {
-
+  prepareNotasEstudiantesforPut(estado_registro: number, accion: string): any {
     let max = this.calificacionesEstudiantesV2.length;
     var califEstudiantes = JSON.parse(JSON.stringify(this.calificacionesEstudiantesV2.slice(1, max - 1)));
 
@@ -589,7 +572,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         })
 
         let fallas;
-        if(this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado){
+        if (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado) {
           fallas = est.VARIOS.fields.filter(v => v.name == "Fallas")[0].value;
         } else {
           fallas = <number>est.VARIOS.fields.filter(v => v.name == "Fallas")[0].value-<number>est.VARIOS["fallasPrev"]
@@ -597,7 +580,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
         let Obs1 = est.VARIOS.fields.filter(v => v.name == "OBS")[0].value
         let ObsObj = this.ObservacionesNotas.filter(obs => obs.Id == Obs1)[0]
-        if (ObsObj == undefined){
+        if (ObsObj == undefined) {
           ObsObj = {CodigoAbreviacion: "0"}
         }
 
@@ -628,10 +611,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       CalificacionesEstudiantes: califEstudiantes
     }
 
-    return dataPut
+    return dataPut;
   }
 
-  checkAccionNotas() {
+  checkAccionNotas(): string {
     let max = this.calificacionesEstudiantesV2.length;
       var CerrarCorte1 = <boolean>this.calificacionesEstudiantesV2[max - 1].CORTE_1.fields[0].value;
       var CerrarCorte2 = <boolean>this.calificacionesEstudiantesV2[max - 1].CORTE_2.fields[0].value;
@@ -650,24 +633,24 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
           accion = "Guardar";
         }
       }
-    return accion
+    return accion;
   }
 
-  putNotasEstudiantes() {
+  putNotasEstudiantes(): Promise<any> {
     return new Promise((resolve,reject) => {
 
       var estado_registro = 0;
 
-    if (this.dataReceived.EstadoRegistro_porTiempo > 0) {
-      estado_registro = this.dataReceived.EstadoRegistro_porTiempo;
-    } else if (this.dataReceived.EstadoRegistro_porExtemporaneo > 0) {
-      estado_registro = this.dataReceived.EstadoRegistro_porExtemporaneo;
-    }
+      if (this.dataReceived.EstadoRegistro_porTiempo > 0) {
+        estado_registro = this.dataReceived.EstadoRegistro_porTiempo;
+      } else if (this.dataReceived.EstadoRegistro_porExtemporaneo > 0) {
+        estado_registro = this.dataReceived.EstadoRegistro_porExtemporaneo;
+      }
 
-    if(this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado){
-      estado_registro = this.EstadosRegistro.Definitiva
-    }
-      
+      if (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado) {
+        estado_registro = this.EstadosRegistro.Definitiva
+      }
+
       var accion = this.checkAccionNotas();
 
       var dataPut = this.prepareNotasEstudiantesforPut(estado_registro, accion);
@@ -675,32 +658,31 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       if (dataPut != undefined) {
         this.sgaMidNotasService.put('notas/asignaturas/estudiantes', dataPut).subscribe(
           (response: any) => {
-            if (response !== null && response.Status == '200') {
-              if (this.needCrearNotasEstudiantes){
-                this.popUpManager.showInfoToast(this.translate.instant('notas.notas_estudiantes_creados'),this.timeinfo)
+            if (response !== null && response.status == '200') {
+              if (this.needCrearNotasEstudiantes) {
+                this.popUpManager.showInfoToast(this.translate.instant('notas.notas_estudiantes_creados'));
               } else {
-                this.popUpManager.showSuccessAlert(this.translate.instant('notas.notas_estudiantes_actualizado'))
+                this.popUpManager.showSuccessAlert(this.translate.instant('notas.notas_estudiantes_actualizado'));
               }
-              resolve(response)
-              if(this.dataReceived.EstadoRegistro_porExtemporaneo > 0){
-                this.router.navigate([`/list-notas`])
+              resolve(response);
+              if (this.dataReceived.EstadoRegistro_porExtemporaneo > 0) {
+                this.router.navigate([`/list-notas`]);
               }
             } else {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.fallo_definir_notas_estudiantes'));
             }
           },
           error => {
-            console.log("putNotasEst...: ",error)
+            console.log("putNotasEst...: ", error);
             this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-            reject(error)
+            reject(error);
           }
         );
       }
     });
   }
 
-  NotasNotValid(){
-    
+  NotasNotValid(): boolean {
     let noValido: boolean = false;
 
     let max = this.calificacionesEstudiantesV2.length;
@@ -723,36 +705,35 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       }
     });
 
-    return noValido
+    return noValido;
   }
 
-  save_N() {
+  save_N(): void {
     let msg
     let cerrar = false
-    if(this.checkAccionNotas() == "Cerrar"){
+    if (this.checkAccionNotas() == "Cerrar") {
       msg = 'notas.cerrar_corte_notas';
       cerrar = true;
     } else {
       msg = 'notas.guardar_cambios_notas';
     }
     this.popUpManager.showConfirmAlert(this.translate.instant(msg),this.translate.instant('notas.captura_notas')).then(async accion => {
-      if(accion.value){
+      if (accion.value) {
         let isBad = this.NotasNotValid();
         if (isBad) {
-          this.popUpManager.showErrorAlert(this.translate.instant('notas.notas_mal_digitadas'))
+          this.popUpManager.showErrorAlert(this.translate.instant('notas.notas_mal_digitadas'));
         } else {
           try {
             await this.putNotasEstudiantes();
             await this.getNotasEstudiantes(this.dataReceived.Asignatura_id, this.dataReceived.Periodo_id);
-            if(cerrar){
+            if (cerrar) {
               this.cajaPorcentajesVer = false;
               await this.getPorcentajes(this.dataReceived.Asignatura_id, this.dataReceived.Periodo_id);
               await this.checkingPorcentajes();
               this.cajaPorcentajesVer = true;
             }
-      
           } catch (error) {
-            console.log("save: ",error)
+            console.log("save: ", error);
           }
           this.formatNotasEstudiantesforTable();
           this.fillTable();
@@ -764,38 +745,37 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
-  cancel_N() {
 
+  cancel_N(): void {
     this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios'),this.translate.instant('notas.captura_notas')).then(accion => {
-      if(accion.value){
+      if (accion.value) {
         this.fillTable();
         this.cargarDatosTabla(this.calificacionesEstudiantesV2);
       }
     });
   }
 
-  regresar() {
-    this.router.navigate([`/list-notas`])
+  regresar(): void {
+    this.router.navigate([`/list-notas`]);
   }
 
-  terminar() {
+  terminar(): void {
     var cerrar = this.checkAccionNotas() == "Cerrar";
-     if(this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado){
+     if (this.Corte1.finalizado && this.Corte2.finalizado && this.Examen.finalizado && this.Habilit.finalizado && !this.Definitiva.finalizado) {
       this.popUpManager.showConfirmAlert(this.translate.instant('notas.pregunta_finalizar_registros'),this.translate.instant('notas.captura_notas')).then(async accion => {
-        if(accion.value){
+        if (accion.value) {
           this.finalizar = true;
           let isBad = this.NotasNotValid();
-        if (isBad) {
-          this.popUpManager.showErrorAlert(this.translate.instant('notas.notas_mal_digitadas'))
-        } else {
-          try {
-            await this.putNotasEstudiantes();
-            this.router.navigate([`/list-notas`])
-          } catch (error) {
-            console.log("save: ",error)
+          if (isBad) {
+            this.popUpManager.showErrorAlert(this.translate.instant('notas.notas_mal_digitadas'));
+          } else {
+            try {
+              await this.putNotasEstudiantes();
+              this.router.navigate([`/list-notas`]);
+            } catch (error) {
+              console.log("save: ", error);
+            }
           }
-        }
         } else if (cerrar) {
           this.updateFooter();
           this.cargarDatosTabla(this.calificacionesEstudiantesV2);
@@ -804,30 +784,30 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     }
   }
 
-  async exportar(){
-    this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'),this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
-      if(accion.value){
+  async exportar(): Promise<any> {
+    this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'), this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
+      if (accion.value) {
         this.fillTable();
         this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         this.loading = true;
-        this.generatePdf("Exportar").then(()=>{
+        this.generatePdf("Exportar").then(() => {
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         });
       }
     });
   }
 
-  async imprimir(){
-    this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'),this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
-      if(accion.value){
+  async imprimir(): Promise<any> {
+    this.popUpManager.showConfirmAlert(this.translate.instant('notas.cancelar_cambios_generarPDF'), this.translate.instant('notas.reporte_captura_porcentajes')).then(accion => {
+      if (accion.value) {
         this.fillTable();
         this.cargarDatosTabla(this.calificacionesEstudiantesV2);
         this.loading = true;
-        this.generatePdf("Imprimir").then(()=>{
+        this.generatePdf("Imprimir").then(() => {
           this.loading = false;
-        }).catch(()=>{
+        }).catch(() => {
           this.loading = false;
         });
       }
@@ -836,10 +816,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
 
   generatePdf(accion: string): Promise<any> {
     return new Promise((resolve, reject) => {
-    console.log("generating file")
-    let date = new Date()
-    let dateinFile = 'Generado por Sistema de Gestión Académica\t\t\t'+date.toLocaleString()+'\n\r'
-    let dateinFileName = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear()
+    console.log("generating file");
+    let date = new Date();
+    let dateinFile = 'Generado por Sistema de Gestión Académica\t\t\t'+date.toLocaleString()+'\n\r';
+    let dateinFileName = date.getDate()+'-'+(date.getMonth()+1)+'-'+date.getFullYear();
     let docDefinition;
     html2canvas(this.HtmlPdf.nativeElement, {scrollX: -window.scrollX}).then(
       canvas => {
@@ -862,64 +842,63 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         let namePdf = this.dataDocente.Asignatura+'_'+this.dataDocente.Docente+'_'+dateinFileName+'.pdf';
         const pdfDoc = pdfMake.createPdf(docDefinition);
 
-        console.log("renderizado ahora: "+accion)
-        
-        if(accion == "Exportar") {
+        console.log("renderizado ahora: " + accion);
+
+        if (accion == "Exportar") {
           pdfDoc.download(namePdf);
-        } else if (accion == "Imprimir"){
+        } else if (accion == "Imprimir") {
           pdfDoc.print();
         }
-        resolve(true)
+        resolve(true);
       }).catch(
         error => {
-          reject(error)
+          reject(error);
         }
       );
     });
   }
 
   //// funciones para gestion de porcentajes ////
-  editCorte1(form: FormGroup) {
+  editCorte1(form: FormGroup): void {
     form.valueChanges.subscribe((data) => {
-
       if (form.valid) {
         this.Corte1.fields.field.forEach((nota) => {
           nota.perc = (data.fields.find(n => String(Object.keys(n)) === nota.name))[nota.name];
         });
-        this.updateSumPercentage(0, data)
+        this.updateSumPercentage(0, data);
       } else {
         this.updateSumPercentage(0, 0);
       }
     })
   }
 
-  editCorte2(form: FormGroup) {
+  editCorte2(form: FormGroup): void {
     form.valueChanges.subscribe((data) => {
       if (form.valid) {
         this.Corte2.fields.field.forEach((nota) => {
           nota.perc = (data.fields.find(n => String(Object.keys(n)) === nota.name))[nota.name];
         });
-        this.updateSumPercentage(1, data)
+        this.updateSumPercentage(1, data);
       } else {
         this.updateSumPercentage(1, 0);
       }
     })
   }
 
-  editExamen(form: FormGroup) {
+  editExamen(form: FormGroup): void {
     form.valueChanges.subscribe((data) => {
       if (form.valid) {
         this.Examen.fields.field.forEach((nota) => {
           nota.perc = (data.fields.find(n => String(Object.keys(n)) === nota.name))[nota.name];
         });
-        this.updateSumPercentage(2, data)
+        this.updateSumPercentage(2, data);
       } else {
         this.updateSumPercentage(2, 0);
       }
     })
   }
 
-  editHabilit(form: FormGroup) {
+  editHabilit(form: FormGroup): void {
     form.valueChanges.subscribe((data) => {
       if (form.valid) {
         this.Habilit.fields.field.forEach((nota) => {
@@ -929,7 +908,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     })
   }
 
-  updateSumPercentage(index, value) {
+  updateSumPercentage(index: number, value: any): void {
     const { fields } = value;
     if (fields && JSON.stringify(fields) !== '[]') {
       this.parcialPercentage[index] = fields.map((f) => {
@@ -939,7 +918,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
         }
         return data
       }).reduce((a: number, b: number) => a + b, 0);
-      this.totalPercentage = this.parcialPercentage.reduce((a, b) => a + b)
+      this.totalPercentage = this.parcialPercentage.reduce((a, b) => a + b);
     } else {
       this.parcialPercentage[index] = value;
       this.totalPercentage = this.parcialPercentage.reduce((a, b) => a + b);
@@ -956,8 +935,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.dataReceived.Periodo_id = 0;
     this.dataReceived.Nivel_id = 0;
     this.dataReceived.EstadoRegistro_porTiempo = 0;
-    this.passDataService.putData(this.dataReceived)
+    this.passDataService.putData(this.dataReceived);
   }
-  
-}
 
+}

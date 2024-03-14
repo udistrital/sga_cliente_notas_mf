@@ -94,39 +94,39 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     }
   }
 
-  getEstadosRegistros(){
+  getEstadosRegistros(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.parametrosService.get('parametro?query=TipoParametroId.Id:52&fields=Id,CodigoAbreviacion,Nombre&limit=0').subscribe(
         response => {
           if (response !== null && response.Status == '200') {
             this.EstadosRegistro = { Corte1: 0, Corte2: 0, Examen: 0, Habilit: 0, Definitiva: 0, }
-            this.EstadosRegistro.Corte1 = response["Data"].filter(e => e.Nombre == "PRIMER CORTE")[0].Id
-            this.EstadosRegistro.Corte2 = response["Data"].filter(e => e.Nombre == "SEGUNDO CORTE")[0].Id
-            this.EstadosRegistro.Examen = response["Data"].filter(e => e.Nombre == "EXAMEN FINAL")[0].Id
-            this.EstadosRegistro.Habilit = response["Data"].filter(e => e.Nombre == "HABILITACIONES")[0].Id
-            this.EstadosRegistro.Definitiva = response["Data"].filter(e => e.Nombre == "DEFINITIVA")[0].Id
+            this.EstadosRegistro.Corte1 = response["Data"].filter(e => e.Nombre == "PRIMER CORTE")[0].Id;
+            this.EstadosRegistro.Corte2 = response["Data"].filter(e => e.Nombre == "SEGUNDO CORTE")[0].Id;
+            this.EstadosRegistro.Examen = response["Data"].filter(e => e.Nombre == "EXAMEN FINAL")[0].Id;
+            this.EstadosRegistro.Habilit = response["Data"].filter(e => e.Nombre == "HABILITACIONES")[0].Id;
+            this.EstadosRegistro.Definitiva = response["Data"].filter(e => e.Nombre == "DEFINITIVA")[0].Id;
             sessionStorage.setItem('EstadosRegistro', JSON.stringify(this.EstadosRegistro));
-            resolve(this.EstadosRegistro)
+            resolve(this.EstadosRegistro);
           }
         },
         () => {
-          reject("Fail_EstReg")
+          reject("Fail_EstReg");
         }
-      )
+      );
     });
   }
 
-  cargarDatosTabla(datosCargados: any[]) {
+  cargarDatosTabla(datosCargados: any[]): void {
     this.dataSource = new MatTableDataSource(datosCargados);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  async validarIngresoaCapturaNotas(asignatura, periodo){
+  async validarIngresoaCapturaNotas(asignatura: string, periodo: string | number): Promise<any> {
     try {
       var hayExtemporaneo = <number>await this.checkModificacionExtemporanea(asignatura);
-      if(hayExtemporaneo > 0){
-        if(hayExtemporaneo == this.EstadosRegistro.Corte1){
+      if (hayExtemporaneo > 0) {
+        if (hayExtemporaneo == this.EstadosRegistro.Corte1) {
           this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.modificacion_extemporanea_Corte1')); //"Esta ingresando por extemporaneo corte1"
         } else if (hayExtemporaneo == this.EstadosRegistro.Corte2) {
           this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.modificacion_extemporanea_Corte2')); //"Esta ingresando por extemporaneo corte2"
@@ -138,8 +138,8 @@ export class ListNotasComponent implements OnInit, OnDestroy {
           this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.modificacion_extemporanea_Definitiva')); //"Esta ingresando por extemporaneo Definitiva"
         }
 
-        this.dataSend.EstadoRegistro_porExtemporaneo = Number(hayExtemporaneo)
-        this.router.navigate([`/crud-notas`])
+        this.dataSend.EstadoRegistro_porExtemporaneo = Number(hayExtemporaneo);
+        this.router.navigate([`/crud-notas`]);
       } else {
         this.dataSend.EstadoRegistro_porExtemporaneo = 0;
         this.bringActivities(periodo);
@@ -150,9 +150,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  loadData() {
-
+  loadData(): void {
     var data: RegistroNotasDocente[];
 
     var docenteId = this.userService.getPersonaId();
@@ -160,10 +158,10 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.sgaMidNotasService.get('docentes/' + docenteId + '/espacios-academicos').subscribe(
       (response: any) => {
-        if (response !== null && response.Status == '404') {
+        if (response !== null && response.status == '404') {
           this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_espacios_academicos'));
         } else {
-          data = response.Data;
+          data = response.data;
           data.forEach(registro => {
             registro.Opcion = {
               icon: 'edit',
@@ -182,7 +180,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     );
   }
 
-  bringActivities(periodo) {
+  bringActivities(periodo: string | number): void {
     this.loading = true;
     this.proceso = undefined;
     this.sgaMidCalendarioService.get('calendario-academico/'+periodo).subscribe(
@@ -193,7 +191,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
           this.proceso = response.data[0].proceso.filter(proceso => this.existe(proceso.Proceso,["calificaciones"]))[0];
           if (this.proceso === undefined) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.no_proceso_calificaciones'));
-          } else{
+          } else {
             this.loading = false;
             this.timeService.getDate("BOG").then(t => {
               this.chechDates(t);
@@ -209,8 +207,7 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     );
   }
 
-  chechDates(fechaActual){
-
+  chechDates(fechaActual: any): void {
     this.validado = {
       corte1: {
         existe: false,
@@ -261,24 +258,24 @@ export class ListNotasComponent implements OnInit, OnDestroy {
         }
       });
     }
-    
+
     if (this.validado.corte1.existe && this.validado.corte2.existe && this.validado.examen.existe && this.validado.habilit.existe) {
       if (this.validado.corte1.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Corte1;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_corte1')); //"Esta ingresando a fechas 1 corte"
-        this.router.navigate([`/crud-notas`])
-      } else if(this.validado.corte2.enFecha) {
+        this.router.navigate([`/crud-notas`]);
+      } else if (this.validado.corte2.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Corte2;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_corte2')); //"Esta ingresando a fechas 2 corte"
-        this.router.navigate([`/crud-notas`])
-      } else if(this.validado.examen.enFecha) {
+        this.router.navigate([`/crud-notas`]);
+      } else if (this.validado.examen.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Examen;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_examen')); //"Esta ingresando a fechas examen"
-        this.router.navigate([`/crud-notas`])
-      } else if(this.validado.habilit.enFecha) {
+        this.router.navigate([`/crud-notas`]);
+      } else if (this.validado.habilit.enFecha) {
         this.dataSend.EstadoRegistro_porTiempo = this.EstadosRegistro.Habilit;
         this.popUpManager.showAlert(this.translate.instant('notas.captura_notas_parciales'), this.translate.instant('notas.fecha_habilit')); //"Esta ingresando a fechas habilit"
-        this.router.navigate([`/crud-notas`])
+        this.router.navigate([`/crud-notas`]);
       } else {
         this.popUpManager.showErrorAlert(this.translate.instant('notas.fuera_fechas')); //"fuera de fechas"
       }
@@ -287,36 +284,36 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkModificacionExtemporanea(asignatura) {
+  checkModificacionExtemporanea(asignatura: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.sgaMidNotasService.get('asignaturas/' + asignatura + '/modificacion-extemporanea').subscribe(
         (response: any) => {
-          if (response !== null && response.Status == '200') {
+          if (response !== null && response.status == '200') {
             var estadoRegistro = 0;
-            var i = response.Data.findIndex(estadoRegistro => estadoRegistro.modificacion_extemporanea === true);
-            if (i > -1){
-              estadoRegistro = response.Data[i].estado_registro_id;
+            var i = response.data.findIndex(estadoRegistro => estadoRegistro.modificacion_extemporanea === true);
+            if (i > -1) {
+              estadoRegistro = response.data[i].estado_registro_id;
             }
-            resolve(estadoRegistro)
+            resolve(estadoRegistro);
           }
         },
         () => {
-          reject(false)
+          reject(false);
         }
       );
     });
   }
 
-  existe(variable, textos: string[]) {
+  existe(variable: string, textos: string[]): boolean {
     return textos.some( (texto) => variable.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(texto) !== -1 );
   }
 
-  enFechas(fechaIni, fechaFin, fechaActual){
+  enFechas(fechaIni: any, fechaFin: any, fechaActual: any): boolean {
     let fi = moment(fechaIni,"YYYY-MM-DDTHH:mm:ss").toDate();
     let ff = moment(fechaFin,"YYYY-MM-DDTHH:mm:ss").toDate();
     ff.setDate(ff.getDate() + 1);
     let f = moment(fechaActual).tz("America/Bogota").toDate();
-    return (fi <= f) && (ff >= f)
+    return (fi <= f) && (ff >= f);
   }
 
   
@@ -324,11 +321,11 @@ export class ListNotasComponent implements OnInit, OnDestroy {
     this.regNotService.putData(this.dataSend);
   }
 
-  registrarNotas(data: any) {
+  registrarNotas(data: any): void {
     this.dataSend.Asignatura_id = data.AsignaturaId;
     this.dataSend.Periodo_id = data.PeriodoId;
     this.dataSend.Nivel_id = data.Nivel_id;
-    this.validarIngresoaCapturaNotas(data.AsignaturaId, data.PeriodoId)
+    this.validarIngresoaCapturaNotas(data.AsignaturaId, data.PeriodoId);
     //this.bringActivities(data.PeriodoId);
   }
 

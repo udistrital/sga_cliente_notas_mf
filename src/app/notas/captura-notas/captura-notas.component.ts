@@ -45,38 +45,38 @@ export class CapturaNotasComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.periodosActivos()
+    this.periodosActivos();
     this.cargarDatosTabla([]);
   }
 
-  cargarDatosTabla(datosCargados: any[]) {
+  cargarDatosTabla(datosCargados: any[]): void {
     this.dataSource = new MatTableDataSource(datosCargados);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  filterPeriodo(periodo) {
+  filterPeriodo(periodo: string): void {
     this.sgaMidNotasService.get('periodos/' + periodo + '/estados-registros').subscribe(
       response => {
-        if (response !== null && response.Status == '200') {
-          this.cargarDatosTabla(response.Data) 
+        if (response !== null && response.status == '200') {
+          this.cargarDatosTabla(response.data);
         } else {
-          this.popUpManager.showInfoToast(this.translate.instant('notas.no_datos_estados_registros'),3000)
-          this.cargarDatosTabla([])
+          this.popUpManager.showInfoToast(this.translate.instant('notas.no_datos_estados_registros'));
+          this.cargarDatosTabla([]);
         }
       },
       () => {
-        this.popUpManager.showInfoToast(this.translate.instant('notas.no_datos_estados_registros'),3000)
-        this.cargarDatosTabla([])
+        this.popUpManager.showInfoToast(this.translate.instant('notas.no_datos_estados_registros'));
+        this.cargarDatosTabla([]);
       }
     );
   }
 
-  useLanguage(language: string) {
+  useLanguage(language: string): void {
     this.translate.use(language);
   }
-  
-  periodosActivos() {
+
+  periodosActivos(): void {
     this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
       (response: any) => {
         if (response !== null && (response.status == '404' || response.status == '400')) {

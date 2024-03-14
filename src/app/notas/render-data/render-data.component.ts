@@ -30,7 +30,7 @@ export class RenderDataComponent implements OnInit, OnDestroy {
   
   constructor() { }
 
-  getData(){
+  getData() {
     this.forTitle = this.value.forTitle ? this.value.forTitle : false;
     this.needEdit = this.value.needEdit ? this.value.needEdit : false;
     this.canEdit = this.value.canEdit ? this.value.canEdit : false;
@@ -40,7 +40,6 @@ export class RenderDataComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.Observaciones = JSON.parse(sessionStorage.getItem('ObservacionesNotas'));
 
     this.getData();
@@ -55,9 +54,9 @@ export class RenderDataComponent implements OnInit, OnDestroy {
         f.needPercent = false;
       }
       if (f.name == "Fallas") {
-        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(<number>f.value), Validators.max(100)]))
+        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(<number>f.value), Validators.max(100)]));
       } else if (f.name == "ACU") {
-        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(0), Validators.max(5)]))
+        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(0), Validators.max(5)]));
       } else if (f.name == "OBS") {
         if (!this.needEdit && !this.forTitle && !this.forClose) {
           let obs = this.Observaciones.filter(obs => obs.Id == f.value)[0]
@@ -66,9 +65,9 @@ export class RenderDataComponent implements OnInit, OnDestroy {
           }
           f.name_alt = obs.Nombre; f.value = obs.CodigoAbreviacion;
         }
-        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0))
+        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0));
       } else {
-        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(0), Validators.max(5)]))
+        this.form.addControl(f.name, new FormControl(f.value ? f.value : 0, [Validators.min(0), Validators.max(5)]));
       }
     });
 
@@ -79,7 +78,6 @@ export class RenderDataComponent implements OnInit, OnDestroy {
         this.value.fields = this.fields;
         this.valueEdited.emit(this.value);
     });
-
   }
 
   ngOnDestroy() {

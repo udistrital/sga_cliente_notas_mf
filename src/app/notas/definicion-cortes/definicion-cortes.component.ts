@@ -7,7 +7,6 @@ import { NivelFormacion } from 'src/data/models/nivel_formacion';
 import { EventoService } from 'src/data/services/evento.service';
 import { ProyectoAcademicoService } from 'src/data/services/proyecto_academico.service';
 import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
-import { SgaMidNotasService } from 'src/data/services/sga_mid_notas.service';
 
 @Component({
   selector: 'definicion-cortes',
@@ -27,14 +26,12 @@ export class DefinicionCortesComponent implements OnInit {
   examen_index = -1;
   habilit_index = -1;
 
-
   settingDates: FormGroup;
 
   loading: boolean = false;
 
   constructor(
     private proyectoService: ProyectoAcademicoService,
-    private sgaMidNotasService: SgaMidNotasService,
     private sgaMidCalendarioService: SgaMidCalendarioService,
     private eventoService: EventoService,
     private popUpManager: PopUpManager,
@@ -63,7 +60,7 @@ export class DefinicionCortesComponent implements OnInit {
         if (response === null) {
           this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_niveles'));//"No se encuentra niveles"
         } else {
-          this.niveles = response.filter(nivel => nivel.NivelFormacionPadreId === null)
+          this.niveles = response.filter(nivel => nivel.NivelFormacionPadreId === null);
           if (this.niveles === null) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_nivel_especifico'));//"No se encuentran los niveles especificados"
           }
@@ -75,10 +72,9 @@ export class DefinicionCortesComponent implements OnInit {
         this.loading = false;
       }
     );
-
   }
 
-  onSelectLevel() {
+  onSelectLevel(): void {
     this.settingDates.reset();
     this.settingDates.disable();
     if (this.selectedLevel.value !== '') {
@@ -102,10 +98,9 @@ export class DefinicionCortesComponent implements OnInit {
         }
       );
     }
-
   }
 
-  onSelectPeriod() {
+  onSelectPeriod(): void {
     this.settingDates.reset();
     this.settingDates.disable();
     if (this.selectedPeriod.value !== '') {
@@ -131,10 +126,9 @@ export class DefinicionCortesComponent implements OnInit {
         }
       );
     }
-
   }
 
-  organizeData() {
+  organizeData(): void {
     this.corte1_index = -1;
     this.corte2_index = -1;
     this.examen_index = -1;
@@ -176,10 +170,9 @@ export class DefinicionCortesComponent implements OnInit {
       });
       this.settingDates.enable();
     }
-
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.settingDates.valid) {
 
       this.loading = true;
@@ -221,7 +214,7 @@ export class DefinicionCortesComponent implements OnInit {
     }
   }
 
-  cleanAll() {
+  cleanAll(): void {
     this.selectedLevel.reset();
     this.selectedLevel.setErrors(null);
     this.selectedPeriod.reset();
@@ -230,7 +223,7 @@ export class DefinicionCortesComponent implements OnInit {
     this.settingDates.disable();
   }
 
-  existe(variable, textos: string[]) {
+  existe(variable: string, textos: string[]): boolean {
     return textos.some((texto) => variable.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").indexOf(texto) !== -1);
   }
 
