@@ -1,0 +1,78 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+notas {
+  width: 98%;
+}
+
+fieldset {
+  margin: 1%;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background: none !important;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: white;
+}
+
+.tab-bold .mat-tab-label {
+  font-weight: bold;
+}
+
+.boton-primary {
+  background-color: #03678F !important;
+  color: white !important;
+}
+
+.boton-primary[disabled] {
+  color: rgba(0, 0, 0, .26) !important;
+  background-color: rgba(0, 0, 0, .12) !important;
+}
+
+.boton-secondary {
+  background-color: #d9534f !important;
+  color: white !important;
+}
+
+.boton-info {
+  background-color: #00a2ff !important;
+  color: white !important;
+}
+
+.boton-info[disabled] {
+    background-color: #007bc2 !important;
+    color: #ddd !important;
+}
+
+.icon-primary {
+  color: #03678F !important;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.mat-mdc-raised-button:not(:disabled) {
+  color: white !important;
+}
+
+.mat-pseudo-checkbox {
+  display: none !important;
+}
+
+.auto {
+  overflow: auto;
+}
+
+.center {
+  text-align: center;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
