@@ -11,7 +11,7 @@ Cliente para la gestión de notas, parte del Sistema de Gestión Académica. Est
 - [Angular Material](https://material.angular.io/) 16.2.13
 - [Angular CDK](https://material.angular.io/cdk/categories) 16.2.13
 - [Angular Flex-Layout](https://github.com/angular/flex-layout) 15.0.0-beta.42
-- [ngx-translate](http://www.ngx-translate.com/) 15.0.0
+- [ngx-translate](https://github.com/ngx-translate/core) 15.0.0
   - Incluye ngx-translate Http Loader
 - [Popper.js](https://popper.js.org/docs/v2/) 2.11.8
 - [Angular2 Toaster](https://www.npmjs.com/package/angular2-toaster) 11.0.1
