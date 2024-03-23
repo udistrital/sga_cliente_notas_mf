@@ -96,9 +96,6 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
   //// pdf /////
   @ViewChild('HtmlPdf', {static: true}) HtmlPdf: ElementRef;
 
-  //// loading ////
-  loading: boolean = false;
-
   errorgen: boolean = false;
 
   constructor(
@@ -789,12 +786,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       if (accion.value) {
         this.fillTable();
         this.cargarDatosTabla(this.calificacionesEstudiantesV2);
-        this.loading = true;
-        this.generatePdf("Exportar").then(() => {
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
+        this.generatePdf("Exportar");
       }
     });
   }
@@ -804,12 +796,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
       if (accion.value) {
         this.fillTable();
         this.cargarDatosTabla(this.calificacionesEstudiantesV2);
-        this.loading = true;
-        this.generatePdf("Imprimir").then(() => {
-          this.loading = false;
-        }).catch(() => {
-          this.loading = false;
-        });
+        this.generatePdf("Imprimir");
       }
     });
   }
