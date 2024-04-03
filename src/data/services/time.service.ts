@@ -18,13 +18,13 @@ export class TimeService {
    */
   async getDate(format?: string): Promise<Date> {
     return new Promise<Date>((resolve, reject) => {
-    this.anyService.get(environment.SGA_MID_SERVICE,'time_bog')
+    this.anyService.get(environment.SGA_MID_NOTAS_SERVICE,'time_bog')
       .subscribe((respTime: any) => {
         if (!format) {
-          const timeNow = new Date(respTime.Data.BOG);
+          const timeNow = new Date(respTime.data.BOG);
           resolve(timeNow);
         } else {
-          const raw = respTime.Data[format];
+          const raw = respTime.data[format];
           if (raw) {
             resolve(raw);
           } else {

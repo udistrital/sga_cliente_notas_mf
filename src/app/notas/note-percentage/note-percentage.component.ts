@@ -9,7 +9,7 @@ import { MyValidators } from 'src/utils/validators';
   templateUrl: './note-percentage.component.html',
   styleUrls: ['./note-percentage.component.scss'],
 })
-export class NotePercentageComponent implements OnInit, AfterViewInit {
+export class NotePercentageComponent implements OnInit {
 
   form: FormGroup;
   settingFields: any = [];
@@ -22,11 +22,7 @@ export class NotePercentageComponent implements OnInit, AfterViewInit {
   editExtemporaneo: boolean = false;
   @Output() formObservable: EventEmitter<any> = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder) {
-
-  }
-  ngAfterViewInit() {
-  }
+  constructor(private formBuilder: FormBuilder) {}
 
   @Input('settings')
   set settings(settings: PorcentajesAsignatura | any) {
@@ -45,10 +41,10 @@ export class NotePercentageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private createPercentageField(defaultValue, name, maxval) {
-      return this.formBuilder.group({
-        [name]: [defaultValue, [Validators.min(0), Validators.max(maxval)]]
-      })
+  private createPercentageField(defaultValue: any, name: string, maxval: number): FormGroup {
+    return this.formBuilder.group({
+      [name]: [defaultValue, [Validators.min(0), Validators.max(maxval)]]
+    })
   }
 
   ngOnInit() {
@@ -60,7 +56,7 @@ export class NotePercentageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private buildForm() {
+  private buildForm(): void {
       this.form = this.formBuilder.group({
         fields: this.formBuilder.array([]),
         maxPercentage: new FormControl(''),
@@ -88,14 +84,13 @@ export class NotePercentageComponent implements OnInit, AfterViewInit {
     return this.form.get('fields').valueChanges
       .pipe(
         map((f: any) => {
-          return f.map(p => p.field).reduce((a, b) => a + b, 0)
+          return f.map(p => p.field).reduce((a, b) => a + b, 0);
         })
-      )
+      );
   }
 
   get allPercentage$() {
     return this.form.get('fields').valueChanges
   }
-
 
 }
