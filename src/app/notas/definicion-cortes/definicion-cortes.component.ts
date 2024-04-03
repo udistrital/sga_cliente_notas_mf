@@ -14,7 +14,7 @@ import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.se
   styleUrls: ['./definicion-cortes.component.scss']
 })
 export class DefinicionCortesComponent implements OnInit {
-
+  dataSource = [];
   selectedLevel: FormControl;
   selectedPeriod: FormControl;
   niveles: NivelFormacion[];

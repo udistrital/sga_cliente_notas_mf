@@ -1,15 +1,32 @@
-.selector {
-    margin: 10px;
+.contenedor-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 0;
 }
 
-.isolateRows {
-    margin: 5px;
-    padding: 10px;
-    border: 1px solid #648496;
-    border-radius: 5px;
-    box-shadow: 0px 0px 3px #888888;
+.card {
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: calc(25% - 20px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.buttons {
-    margin: 20px;
+.card h2 {
+    margin-top: 0;
+}
+
+@media (max-width: 1300px) {
+    .card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 711px) {
+    .card {
+        width: 100%;
+    }
 }
