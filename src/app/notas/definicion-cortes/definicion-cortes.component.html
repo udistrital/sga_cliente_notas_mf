@@ -1,0 +1,199 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <div class="row" align="center">
+                <div class="col">
+                    {{ 'notas.definicion_cortes' | translate }}
+                </div>
+            </div>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row selector">
+            <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-select [formControl]="selectedLevel" placeholder="Nivel" (selectionChange)="onSelectLevel()">
+                        <mat-option value="">{{ 'notas.select_nivel' | translate }}</mat-option>
+                        <mat-option *ngFor="let nivel of niveles" [value]="nivel.Id">{{nivel.Nombre}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field style="width: 100%;">
+                    <mat-select [formControl]="selectedPeriod" placeholder="Periodo"
+                        (selectionChange)="onSelectPeriod()">
+                        <mat-option value="">{{ 'notas.select_periodo' | translate }}</mat-option>
+                        <mat-option *ngFor="let periodo of periodos" [value]="periodo.Id">{{periodo.Nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <fieldset [ngClass]="{'fieldseter':true} ">
+            <legend> {{ 'notas.definicion_fechas' | translate }} </legend>
+
+            <form novalidate (ngSubmit)="onSubmit()" [formGroup]="settingDates">
+
+                <div class="isolateRows">
+                    <div class="row">
+                        <div class="col">
+                            <strong>{{ 'notas.corte1' | translate }}:</strong>
+                        </div>
+                    </div>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-2  d-flex justify-content-center">
+                            <strong>{{ 'notas.desde' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_inicio' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Corte1_i" formControlName="corte1_inicio">
+                                <mat-datepicker-toggle matSuffix [for]="Corte1_i"></mat-datepicker-toggle>
+                                <mat-datepicker #Corte1_i></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.hasta' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_fin' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Corte1_f" [min]="Corte1_i?._model?.selection"
+                                    formControlName="corte1_fin">
+                                <mat-datepicker-toggle matSuffix [for]="Corte1_f"></mat-datepicker-toggle>
+                                <mat-datepicker #Corte1_f></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="isolateRows">
+                    <div class="row">
+                        <div class="col">
+                            <strong>{{ 'notas.corte2' | translate }}:</strong>
+                        </div>
+                    </div>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.desde' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_inicio' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Corte2_i" [min]="Corte1_f?._model?.selection"
+                                    formControlName="corte2_inicio">
+                                <mat-datepicker-toggle matSuffix [for]="Corte2_i"></mat-datepicker-toggle>
+                                <mat-datepicker #Corte2_i></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.hasta' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_fin' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Corte2_f" [min]="Corte2_i?._model?.selection"
+                                    formControlName="corte2_fin">
+                                <mat-datepicker-toggle matSuffix [for]="Corte2_f"></mat-datepicker-toggle>
+                                <mat-datepicker #Corte2_f></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="isolateRows">
+                    <div class="row">
+                        <div class="col">
+                            <strong>{{ 'notas.examen_final' | translate }}:</strong>
+                        </div>
+                    </div>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.desde' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_inicio' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Exam_i" [min]="Corte2_f?._model?.selection"
+                                    formControlName="examen_inicio">
+                                <mat-datepicker-toggle matSuffix [for]="Exam_i"></mat-datepicker-toggle>
+                                <mat-datepicker #Exam_i></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.hasta' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_fin' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Exam_f" [min]="Exam_i?._model?.selection"
+                                    formControlName="examen_fin">
+                                <mat-datepicker-toggle matSuffix [for]="Exam_f"></mat-datepicker-toggle>
+                                <mat-datepicker #Exam_f></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="isolateRows">
+                    <div class="row">
+                        <div class="col">
+                            <strong>{{ 'notas.habilitaciones' | translate }}:</strong>
+                        </div>
+                    </div>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.desde' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_inicio' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Habilit_i" [min]="Exam_f?._model?.selection"
+                                    formControlName="habilit_inicio">
+                                <mat-datepicker-toggle matSuffix [for]="Habilit_i"></mat-datepicker-toggle>
+                                <mat-datepicker #Habilit_i></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-center">
+                            <strong>{{ 'notas.hasta' | translate }}:</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{ 'notas.elije_fecha_fin' | translate }}:</mat-label>
+                                <input matInput [matDatepicker]="Habilit_f" [min]="Habilit_i?._model?.selection"
+                                    formControlName="habilit_fin">
+                                <mat-datepicker-toggle matSuffix [for]="Habilit_f"></mat-datepicker-toggle>
+                                <mat-datepicker #Habilit_f></mat-datepicker>
+                                <mat-error>{{ 'notas.fecha_invalida' | translate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3" align="center">
+                            <button mat-raised-button [color]="settingDates.valid ? 'primary' : 'warn'" type="submit">{{
+                                'notas.guardar' | translate }}</button>
+                        </div>
+                        <div class="col-md-3" align="center">
+                            <button mat-raised-button color="primary" (click)="cleanAll()">{{ 'notas.limpiar' |
+                                translate }}</button>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </form>
+
+        </fieldset>
+    </mat-card-content>
+</mat-card>
