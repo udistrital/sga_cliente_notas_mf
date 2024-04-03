@@ -20,10 +20,6 @@ import { UserService } from 'src/data/services/users.service';
   styleUrls: ['./list-notas.component.scss']
 })
 export class ListNotasComponent implements OnInit, OnDestroy {
-
-  //// loading animation ////
-  loading: boolean = true;
-  
   EstadosRegistro: any
 
   dataSource: MatTableDataSource<any>;
@@ -155,7 +151,6 @@ export class ListNotasComponent implements OnInit, OnDestroy {
 
     var docenteId = this.userService.getPersonaId();
 
-    this.loading = true;
     this.sgaMidNotasService.get('docentes/' + docenteId + '/espacios-academicos').subscribe(
       (response: any) => {
         if (response !== null && response.status == '404') {
@@ -171,17 +166,14 @@ export class ListNotasComponent implements OnInit, OnDestroy {
           })
           this.cargarDatosTabla(data);
         }
-        this.loading = false;
       },
       () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-        this.loading = false;
       }
     );
   }
 
   bringActivities(periodo: string | number): void {
-    this.loading = true;
     this.proceso = undefined;
     this.sgaMidCalendarioService.get('calendario-academico/'+periodo).subscribe(
       (response: any) => {
@@ -192,17 +184,14 @@ export class ListNotasComponent implements OnInit, OnDestroy {
           if (this.proceso === undefined) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.no_proceso_calificaciones'));
           } else {
-            this.loading = false;
             this.timeService.getDate("BOG").then(t => {
               this.chechDates(t);
             });
           }
         }
-        this.loading = false;
       },
       () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-        this.loading = false;
       }
     );
   }

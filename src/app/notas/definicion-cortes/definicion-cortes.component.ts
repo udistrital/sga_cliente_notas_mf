@@ -28,8 +28,6 @@ export class DefinicionCortesComponent implements OnInit {
 
   settingDates: FormGroup;
 
-  loading: boolean = false;
-
   constructor(
     private proyectoService: ProyectoAcademicoService,
     private sgaMidCalendarioService: SgaMidCalendarioService,
@@ -54,7 +52,6 @@ export class DefinicionCortesComponent implements OnInit {
     });
     this.settingDates.disable();
 
-    this.loading = true;
     this.proyectoService.get('nivel_formacion?limit=0').subscribe(
       (response: NivelFormacion[]) => {
         if (response === null) {
@@ -65,11 +62,9 @@ export class DefinicionCortesComponent implements OnInit {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_nivel_especifico'));//"No se encuentran los niveles especificados"
           }
         }
-        this.loading = false;
       },
       () => {
         this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-        this.loading = false;
       }
     );
   }
@@ -78,7 +73,6 @@ export class DefinicionCortesComponent implements OnInit {
     this.settingDates.reset();
     this.settingDates.disable();
     if (this.selectedLevel.value !== '') {
-      this.loading = true;
       this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
         (response: any) => {
           if (response !== null && (response.status == '404' || response.status == '400')) {
@@ -90,11 +84,9 @@ export class DefinicionCortesComponent implements OnInit {
             }
             this.selectedPeriod.setValue('');
           }
-          this.loading = false;
         },
         () => {
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          this.loading = false;
         }
       );
     }
@@ -104,7 +96,6 @@ export class DefinicionCortesComponent implements OnInit {
     this.settingDates.reset();
     this.settingDates.disable();
     if (this.selectedPeriod.value !== '') {
-      this.loading = true;
       this.proceso = undefined;
       this.sgaMidCalendarioService.get('calendario-academico/' + this.selectedPeriod.value).subscribe(
         (response: any) => {
@@ -118,11 +109,9 @@ export class DefinicionCortesComponent implements OnInit {
               this.organizeData();
             }
           }
-          this.loading = false;
         },
         () => {
           this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
-          this.loading = false;
         }
       );
     }
@@ -174,9 +163,6 @@ export class DefinicionCortesComponent implements OnInit {
 
   onSubmit(): void {
     if (this.settingDates.valid) {
-
-      this.loading = true;
-
       this.proceso["Actividades"][this.corte1_index].FechaInicio = moment(this.settingDates.get("corte1_inicio").value).format('YYYY-MM-DDTHH:mm:ss[Z]');
       this.proceso["Actividades"][this.corte1_index].FechaFin = moment(this.settingDates.get("corte1_fin").value).format('YYYY-MM-DDTHH:mm:ss[Z]');
       this.proceso["Actividades"][this.corte2_index].FechaInicio = moment(this.settingDates.get("corte2_inicio").value).format('YYYY-MM-DDTHH:mm:ss[Z]');
@@ -204,7 +190,6 @@ export class DefinicionCortesComponent implements OnInit {
                 },
               );
             }
-            this.loading = false;
           },
           () => {
             this.popUpManager.showErrorToast(this.translate.instant('ERROR.general'));
