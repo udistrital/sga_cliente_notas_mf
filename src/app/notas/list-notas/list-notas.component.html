@@ -7,7 +7,10 @@
     </div>
     <hr>
     <mat-card-content>
-        <fieldset [ngClass]="{'fieldseter':true} ">
+        <div class="spinner-container" *ngIf="loading">
+            <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <fieldset *ngIf="!loading" [ngClass]="{'fieldseter':true} ">
             <legend> {{ 'notas.carga_academica' | translate }} </legend>
             <table mat-table [dataSource]="dataSource" matSort>
                 <ng-container *ngFor="let columna of displayedColumns" [matColumnDef]="columna">

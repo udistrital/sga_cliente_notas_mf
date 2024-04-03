@@ -46,6 +46,10 @@ export class PopUpManager {
         });
     }
 
+    public showInfoToast(message: string, action: any = null): void {
+        this._snackBar.open(message, action);
+    }
+
     public showErrorToast(message: string, action: any = null): void {
         this._snackBar.open(message, action);
     }
