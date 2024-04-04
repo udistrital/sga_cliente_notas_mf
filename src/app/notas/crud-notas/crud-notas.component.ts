@@ -18,6 +18,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { first } from 'rxjs';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -26,6 +27,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./crud-notas.component.scss']
 })
 export class CrudNotasComponent implements OnInit, OnDestroy {
+
+  
 
   //// datos de entrada para cargar componente ////
   dataReceived: DataAsignatura = {
@@ -886,7 +889,7 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
   }
 
   editHabilit(form: FormGroup): void {
-    form.valueChanges.subscribe((data) => {
+    form.valueChanges.pipe(first()).subscribe((data) => {
       if (form.valid) {
         this.Habilit.fields.field.forEach((nota) => {
           nota.perc = (data.fields.find(n => String(Object.keys(n)) === nota.name))[nota.name];
@@ -923,6 +926,10 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.dataReceived.Nivel_id = 0;
     this.dataReceived.EstadoRegistro_porTiempo = 0;
     this.passDataService.putData(this.dataReceived);
+  }
+
+  info(){
+    console.log("info", this.modeloPorcentajes);
   }
 
 }

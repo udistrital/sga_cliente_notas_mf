@@ -14,22 +14,18 @@ const routes: Routes = [{
         {
             path: 'definicion-cortes',
             component: DefinicionCortesComponent,
-//            canActivate: [AuthGuard],
         },
         {
             path: 'list-notas',
             component: ListNotasComponent,
-//            canActivate: [AuthGuard],
         },
         {
             path: 'captura-notas',
             component: CapturaNotasComponent,
-//            canActivate: [AuthGuard],
         },
         {
             path: 'crud-notas',
             component: CrudNotasComponent,
-//          canActivate: [AuthGuard],
         }
     ],
 }];

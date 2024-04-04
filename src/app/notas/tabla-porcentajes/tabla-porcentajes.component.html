@@ -1,0 +1,40 @@
+<div *ngIf="formularioListo">
+  <form [formGroup]="porcentajesFormGroup">
+    <table>
+      <!-- HEADER ROW -->
+      <tr>
+        <th
+          *ngFor="let modeloPorcentaje of modeloPorcentajes"
+          [attr.colspan]="modeloPorcentaje.fields.field.length"
+        >
+          {{ modeloPorcentaje.fields.name }}
+        </th>
+      </tr>
+      <!-- SUB ITEMS -->
+      <tr>
+        <ng-container *ngFor="let item of modeloPorcentajes">
+          <td *ngFor="let subField of item.fields.field">
+            {{ subField.name }} %
+          </td>
+        </ng-container>
+      </tr>
+      <tr>
+        <ng-container *ngFor="let item of modeloPorcentajes">
+          <td *ngFor="let subField of item.fields.field">
+            <input
+              type="number"
+              placeholder="% {{ subField.name }}"
+              [formControlName]="subField.name"
+              [readonly]="isreadonly ? isreadonly : false"
+              [min]="subField.fix ? subField.fix : 0"
+              [max]="
+                subField.max ? subField.max : subField.fix ? subField.fix : 100
+              "
+            />
+          </td>
+        </ng-container>
+      </tr>
+    </table>
+  </form>
+</div>
+
