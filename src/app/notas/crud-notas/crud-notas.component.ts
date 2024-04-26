@@ -928,8 +928,6 @@ export class CrudNotasComponent implements OnInit, OnDestroy {
     this.passDataService.putData(this.dataReceived);
   }
 
-  info(){
-    console.log("info", this.modeloPorcentajes);
-  }
+  
 
 }
