@@ -52,12 +52,14 @@ import { TimeService } from 'src/data/services/time.service';
 import { NotePercentageComponent } from './note-percentage/note-percentage.component';
 import { RenderDataComponent } from './render-data/render-data.component';
 import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
+import { TablaPorcentajesComponent } from './tabla-porcentajes/tabla-porcentajes.component';
 
 @NgModule({
   declarations: [
     routedComponents,
     NotePercentageComponent,
-    RenderDataComponent
+    RenderDataComponent,
+    TablaPorcentajesComponent
   ],
   imports: [
     CommonModule,
@@ -100,7 +102,8 @@ import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.se
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    NotasRoutingComponent
+    NotasRoutingComponent,
+    
   ],
   exports: [
     NotasComponent,

@@ -1,238 +1,256 @@
-<mat-card>
-    <br>
-    <div class="row" align="center">
-        <div class="col">
-            <strong>{{ 'notas.captura_notas_parciales' | translate }}</strong>
+<h3>{{ "notas.captura_notas_parciales" | translate }}</h3>
+<mat-card-content>
+  <div id="HtmlPdf" #HtmlPdf>
+    <mat-card style="margin-bottom: 1rem">
+      <mat-card-header>
+        <mat-card-title>
+          {{ "notas.registro_notas_parciales" | translate }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="responsive-form margin-y">
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label class="">{{ "notas.docente" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Docente }}</label>
+          </div>
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.identificacion" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Identificacion }}</label>
+          </div>
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.codigo" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Codigo }}</label>
+          </div>
+
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.asignatura" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Asignatura }}</label>
+          </div>
+
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.nivel" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Nivel }}</label>
+          </div>
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.grupo" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Grupo }}</label>
+          </div>
+
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.inscritos" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Inscritos }}</label>
+          </div>
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.creditos" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Creditos }}</label>
+          </div>
+          <div class="form-item one-third-width" style="overflow: hidden">
+            <label>{{ "notas.periodo" | translate }}: </label>
+            <label class="underline">{{ dataDocente.Periodo }}</label>
+          </div>
         </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- <mat-card *ngIf="cajaPorcentajesVer"> -->
+    <mat-card *ngIf="cajaPorcentajesVer" class="margin-y">
+      <mat-card-header>
+        <mat-card-title>
+          {{ "notas.captura_porcentajes" | translate }}
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="container-notes">
+        <div class="message-alert">
+          {{ "notas.info_guardado_necesario" | translate }}
+        </div>
+        <table>
+          <th>{{ Corte1.fields.name }}</th>
+          <th>{{ Corte2.fields.name }}</th>
+          <th>{{ Examen.fields.name }}</th>
+          <th>{{ Habilit.fields.name }}</th>
+          <th>Total</th>
+
+          <tr>
+            <td>
+              <note-percentage
+                (formObservable)="editCorte1($event)"
+                [settings]="Corte1"
+              ></note-percentage>
+            </td>
+            <td>
+              <note-percentage
+                (formObservable)="editCorte2($event)"
+                [settings]="Corte2"
+              ></note-percentage>
+            </td>
+            <td>
+              <note-percentage
+                (formObservable)="editExamen($event)"
+                [settings]="Examen"
+              >
+              </note-percentage>
+            </td>
+            <td>
+              <note-percentage
+                (formObservable)="editHabilit($event)"
+                [settings]="Habilit"
+              >
+              </note-percentage>
+            </td>
+            <td>
+              <mat-form-field>
+                <mat-label>Total %</mat-label>
+                <input
+                  matInput
+                  readonly
+                  type="number"
+                  value="{{ totalPercentage }}"
+                />
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+        <div class="container-bottons margin-y">
+          <button
+            [disabled]="!GuardarEstructuraNota || errorgen || finalizado"
+            mat-flat-button
+            color="accent"
+            class="boton-primary"
+            (click)="save_P()"
+          >
+            {{ "notas.guardar" | translate }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="overflow: auto">
+      <mat-card-header>
+        <mat-card-title>
+          {{ "notas.captura_notas" | translate }}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="overflow: auto">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container
+              *ngFor="let columna of displayedColumns"
+              [matColumnDef]="columna"
+            >
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ nombresColumnas[columna] | translate }}
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let fila; let i = index"
+                [ngClass]="{
+                  'row-par': i % 2 === 0,
+                  'row-impar': i % 2 !== 0,
+                  'row-hover': hoverIndex === i
+                }"
+                (mouseover)="hoverIndex = i"
+                (mouseout)="hoverIndex = null"
+              >
+                <ng-container *ngIf="!actionColumns?.includes(columna)">
+                  {{ fila[columna] }}
+                </ng-container>
+                <ng-container *ngIf="actionColumns?.includes(columna)">
+                  <render-data [value]="fila[columna]"> </render-data>
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td
+                class="mat-cell center"
+                [attr.colspan]="displayedColumns.length"
+              >
+                {{ "asignaturas.no_datos_notas" | translate }}
+              </td>
+            </tr>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let fila; columns: displayedColumns"></tr>
+          </table>
+          <mat-paginator
+            [pageSize]="5"
+            [pageSizeOptions]="[]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+
+        <br /><br />
+
+        <div class="container-bottons" style="padding: 20px">
+          <button
+            mat-flat-button
+            color="warn"
+            class="boton-primary"
+            (click)="regresar()"
+          >
+            {{ "notas.regresar" | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="warn"
+            class="boton-primary"
+            (click)="cancel_N()"
+            [disabled]="errorgen || finalizado"
+          >
+            {{ "notas.cancelar" | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="accent"
+            class="boton-primary"
+            (click)="save_N()"
+            [disabled]="errorgen || finalizado"
+          >
+            {{ "notas.guardar" | translate }}
+          </button>
+
+          <button
+            mat-flat-button
+            color="primary"
+            class="boton-primary"
+            (click)="terminar()"
+            [disabled]="errorgen || !definitiva"
+          >
+            {{ "notas.finalizar" | translate }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-card-content>
+
+<mat-card style="margin-top: 1rem">
+  <mat-card-header>
+    <mat-card-title>
+      {{ "notas.reporte_captura_porcentajes" | translate }}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="container-bottons" style="padding: 20px">
+      
+        <button
+          mat-flat-button
+          color="accent"
+          class="boton-primary"
+          (click)="exportar()"
+          [disabled]="errorgen"
+        >
+          {{ "notas.export_Pdf" | translate }}
+        </button>
+        <button
+          mat-flat-button
+          color="accent"
+          class="boton-primary"
+          (click)="imprimir()"
+          [disabled]="errorgen"
+        >
+          {{ "notas.print_pdf" | translate }}
+        </button>
     </div>
-    <hr>
-    <mat-card-content>
-        <div id="HtmlPdf" #HtmlPdf>
-            <fieldset [ngClass]="{'fieldseter':true}">
-                <legend> {{ 'notas.registro_notas_parciales' | translate }} </legend>
-                <div class="container-docente">
-                    <div class="row d-flex align-items-end fila">
-                        <div class="col-lg-4">
-                            <div class="row d-flex align-items-end">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.docente' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Docente}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="row d-flex align-items-end">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.identificacion' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Identificacion}}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row d-flex align-items-end fila">
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.codigo' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Codigo}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.asignatura' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Asignatura}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.nivel' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Nivel}}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row d-flex align-items-end fila">
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.grupo' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Grupo}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.inscritos' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Inscritos}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.creditos' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Creditos}}</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-sm-auto">
-                                    <label>{{ 'notas.periodo' | translate }}: </label>
-                                </div>
-                                <div class="col-sm">
-                                    <label class="underline">{{dataDocente.Periodo}}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
-            <br><br>
-
-            <fieldset [ngClass]="{'fieldseter':true} ">
-                <legend> {{ 'notas.captura_porcentajes' | translate }} </legend>
-                <div *ngIf="cajaPorcentajesVer" class="container-notes">
-                    <div class="row">
-                        <div class="container-form-wrap">
-                            <div class="row">
-                                <note-percentage (formObservable)="editCorte1($event)" [settings]="Corte1">
-                                </note-percentage>
-                                <note-percentage (formObservable)="editCorte2($event)" [settings]="Corte2">
-                                </note-percentage>
-                                <note-percentage (formObservable)="editExamen($event)" [settings]="Examen">
-                                </note-percentage>
-                            </div>
-                        </div>
-                        <div class="container-form-wrap">
-                            <div class="row">
-                                <note-percentage (formObservable)="editHabilit($event)" [settings]="Habilit">
-                                </note-percentage>
-                            </div>
-                        </div>
-                        <div class="container-form-wrap">
-                            <div class="row">
-                                <div class="container-form">
-                                    <strong> Total </strong>
-                                    <div class="container-percentage">
-                                        <mat-form-field>
-                                            <mat-label>Total %</mat-label>
-                                            <input matInput readonly type="number" value="{{totalPercentage}}">
-                                        </mat-form-field>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row d-flex align-items-center">
-                    <div class="col-md" align="center">
-                        <button [disabled]="!GuardarEstructuraNota || errorgen || finalizado" mat-flat-button color="primary" class="boton-primary"
-                            (click)='save_P()'>{{ 'notas.guardar' | translate }}</button>
-                    </div>
-                </div>
-            </fieldset>
-            <br>
-
-            <div class="message-alert" >
-                {{ 'notas.info_guardado_necesario' | translate }}
-            </div>
-
-            <br>
-            <fieldset [ngClass]="{'fieldseter':true}" style="overflow:auto;">
-                <legend> {{ 'notas.captura_notas' | translate }} </legend>
-
-                <div style="overflow: auto;">
-                    <table mat-table [dataSource]="dataSource" matSort>
-                        <ng-container *ngFor="let columna of displayedColumns" [matColumnDef]="columna">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ nombresColumnas[columna] | translate }}</th>
-                            <td mat-cell *matCellDef="let fila; let i = index"
-                                [ngClass]="{'row-par': i % 2 === 0, 'row-impar': i % 2 !== 0, 'row-hover': hoverIndex === i}"
-                                (mouseover)="hoverIndex = i"
-                                (mouseout)="hoverIndex = null">
-
-                                <ng-container *ngIf="!actionColumns?.includes(columna)">
-                                    {{ fila[columna] }}
-                                </ng-container>
-                                <ng-container *ngIf="actionColumns?.includes(columna)">
-                                    <render-data [value]="fila[columna]">
-                                    </render-data>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell center" [attr.colspan]="displayedColumns.length">
-                                {{ 'asignaturas.no_datos_notas' | translate }}
-                            </td>
-                        </tr>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let fila; columns: displayedColumns;"></tr>
-                    </table>
-
-                    <mat-paginator
-                        [pageSize]="5"
-                        [pageSizeOptions]="[]"
-                        showFirstLastButtons></mat-paginator>
-                </div>
-
-                <br><br>
-
-                <div class="row d-flex align-items-center" style="padding: 20px;">
-                    <div class="col-md-3" align="center">
-                        <button mat-flat-button color="primary" class="boton-primary" (click)='regresar()'>{{ 'notas.regresar' | translate }}</button>
-                    </div>
-                    <div class="col-md-3" align="center">
-                        <button mat-flat-button color="primary" class="boton-primary" (click)="save_N()" [disabled]="errorgen || finalizado">{{ 'notas.guardar' | translate }}</button>
-                    </div>
-                    <div class="col-md-3" align="center">
-                        <button mat-flat-button color="primary" class="boton-primary" (click)="cancel_N()" [disabled]="errorgen || finalizado">{{ 'notas.cancelar' | translate }}</button>
-                    </div>
-                    <div class="col-md-3" align="center">
-                        <button mat-flat-button color="primary" class="boton-primary" (click)='terminar()' [disabled]="errorgen || !definitiva">{{ 'notas.finalizar' | translate }}</button>
-                    </div>
-                </div>
-
-            </fieldset>
-        </div>
-    </mat-card-content>
-    <mat-card-footer style="margin-top: 5%;">
-        <fieldset [ngClass]="{'fieldseter':true}">
-            <legend> {{ 'notas.reporte_captura_porcentajes' | translate }} </legend>
-            <div class="row d-flex align-items-center" style="padding: 20px;">
-                <div class="col-md-3" align="center"></div>
-                <div class="col-md-3" align="center">
-                    <button mat-flat-button color="primary" class="boton-primary" (click)='exportar()' [disabled]="errorgen">{{ 'notas.export_Pdf' | translate }}</button>
-                </div>
-                <div class="col-md-3" align="center">
-                    <button mat-flat-button color="primary" class="boton-primary" (click)='imprimir()' [disabled]="errorgen">{{ 'notas.print_pdf' | translate }}</button>
-                </div>
-                <div class="col-md-3" align="center"></div>
-            </div>
-        </fieldset>
-    </mat-card-footer>
+  </mat-card-content>
 </mat-card>
