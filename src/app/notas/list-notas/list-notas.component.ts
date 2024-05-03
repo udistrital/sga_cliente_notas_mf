@@ -211,12 +211,12 @@ export class ListNotasComponent implements OnInit, OnDestroy {
       .get("docentes/" + docenteId + "/espacios-academicos")
       .subscribe(
         (response: any) => {
-          if (response !== null && response.status == "404") {
+          if (response !== null && response.Status == "404") {
             this.popUpManager.showErrorAlert(
               this.translate.instant("notas.sin_espacios_academicos")
             );
           } else {
-            data = response.data;
+            data = response.Data;
             data.forEach((registro) => {
               registro.Opcion = {
                 icon: "edit",
@@ -241,12 +241,12 @@ export class ListNotasComponent implements OnInit, OnDestroy {
       .get("calendario-academico/" + periodo)
       .subscribe(
         (response: any) => {
-          if (response !== null && response.status == "404") {
+          if (response !== null && response.Status == "404") {
             this.popUpManager.showErrorAlert(
               this.translate.instant("notas.sin_calendario")
             );
           } else {
-            this.proceso = response.data[0].proceso.filter((proceso) =>
+            this.proceso = response.Data[0].proceso.filter((proceso) =>
               this.existe(proceso.Proceso, ["calificaciones"])
             )[0];
             if (this.proceso === undefined) {
@@ -381,14 +381,14 @@ export class ListNotasComponent implements OnInit, OnDestroy {
         .pipe(first())
         .subscribe(
           (response: any) => {
-            if (response !== null && response.status == "200") {
+            if (response !== null && response.Status == "200") {
               var estadoRegistro = 0;
-              var i = response.data.findIndex(
+              var i = response.Data.findIndex(
                 (estadoRegistro) =>
                   estadoRegistro.modificacion_extemporanea === true
               );
               if (i > -1) {
-                estadoRegistro = response.data[i].estado_registro_id;
+                estadoRegistro = response.Data[i].estado_registro_id;
               }
               resolve(estadoRegistro);
             }

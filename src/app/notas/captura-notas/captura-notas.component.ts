@@ -58,8 +58,8 @@ export class CapturaNotasComponent implements OnInit {
   filterPeriodo(periodo: string): void {
     this.sgaMidNotasService.get('periodos/' + periodo + '/estados-registros').subscribe(
       response => {
-        if (response !== null && response.status == '200') {
-          this.cargarDatosTabla(response.data);
+        if (response !== null && response.Status == '200') {
+          this.cargarDatosTabla(response.Data);
         } else {
           this.popUpManager.showInfoToast(this.translate.instant('notas.no_datos_estados_registros'));
           this.cargarDatosTabla([]);
@@ -79,10 +79,10 @@ export class CapturaNotasComponent implements OnInit {
   periodosActivos(): void {
     this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
       (response: any) => {
-        if (response !== null && (response.status == '404' || response.status == '400')) {
+        if (response !== null && (response.Status == '404' || response.Status == '400')) {
           this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
         } else {
-          this.periodos = response.data.filter(periodo => periodo.Activo === true);
+          this.periodos = response.Data.filter(periodo => periodo.Activo === true);
           if (this.periodos === null) {
             this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
           }
