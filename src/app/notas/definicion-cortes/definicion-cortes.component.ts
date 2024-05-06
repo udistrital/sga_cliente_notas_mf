@@ -75,10 +75,10 @@ export class DefinicionCortesComponent implements OnInit {
     if (this.selectedLevel.value !== '') {
       this.sgaMidCalendarioService.get('calendario-academico?limit=0').subscribe(
         (response: any) => {
-          if (response !== null && (response.status == '404' || response.status == '400')) {
+          if (response !== null && (response.Status == '404' || response.Status == '400')) {
             this.popUpManager.showErrorAlert(this.translate.instant('calendario.sin_calendarios'));
           } else {
-            this.periodos = response.data.filter(periodo => periodo.Nivel === this.selectedLevel.value && periodo.Activo === true);
+            this.periodos = response.Data.filter(periodo => periodo.Nivel === this.selectedLevel.value && periodo.Activo === true);
             if (this.periodos === null) {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calendario_nivel'));//"no hay calendarios para este nivel o no se encuentran activos"
             }
@@ -99,10 +99,10 @@ export class DefinicionCortesComponent implements OnInit {
       this.proceso = undefined;
       this.sgaMidCalendarioService.get('calendario-academico/' + this.selectedPeriod.value).subscribe(
         (response: any) => {
-          if (response === null || !response.success) {
+          if (response === null || !response.Success) {
             this.popUpManager.showErrorAlert(this.translate.instant('notas.sin_calendario_periodo'));//"No se encuentra calendario para periodo"
           } else {
-            this.proceso = response.data[0].proceso != null ? response.data[0].proceso.filter(proceso => this.existe(proceso.Proceso, ["calificaciones"]))[0] : undefined;
+            this.proceso = response.Data[0].proceso != null ? response.Data[0].proceso.filter(proceso => this.existe(proceso.Proceso, ["calificaciones"]))[0] : undefined;
             if (this.proceso === undefined) {
               this.popUpManager.showErrorAlert(this.translate.instant('notas.no_proceso_calificaciones'));//"No hay proceso de calificaciones"
             } else {
