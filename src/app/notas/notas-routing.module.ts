@@ -16,15 +16,15 @@ const routes: Routes = [{
             component: DefinicionCortesComponent,
         },
         {
-            path: 'list-notas',
+            path: 'listado',
             component: ListNotasComponent,
         },
         {
-            path: 'captura-notas',
+            path: 'captura',
             component: CapturaNotasComponent,
         },
         {
-            path: 'crud-notas',
+            path: 'crud',
             component: CrudNotasComponent,
         }
     ],
