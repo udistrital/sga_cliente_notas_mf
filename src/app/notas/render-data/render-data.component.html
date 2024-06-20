@@ -113,7 +113,7 @@
                     <td>
                         <ng-container *ngFor="let f of fields">
                             <mat-checkbox color="primary" [formControlName]="f.name" [disabled]="!canEdit">
-                                <strong>Cerrar</strong>
+                                <strong>{{ "notas.cerrar" | translate }}</strong>
                             </mat-checkbox>
                         </ng-container>
                     </td>
