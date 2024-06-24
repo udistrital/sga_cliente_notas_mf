@@ -2,6 +2,7 @@ export const environment = {
   production: false,
   assets: "https://pruebasassets.portaloas.udistrital.edu.co/",
   apiUrl: "http://localhost:4213/",
+  encryptSecretKey: process.env["NG_APP_KEY"],
   PROYECTO_ACADEMICO_SERVICE:
     "https://autenticacion.portaloas.udistrital.edu.co/apioas/proyecto_academico_crud/v1/",
   //PROYECTO_ACADEMICO_SERVICE: 'http://pruebasapi.intranetoas.udistrital.edu.co:8116/v1/',
