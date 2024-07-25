@@ -53,6 +53,7 @@ import { NotePercentageComponent } from './note-percentage/note-percentage.compo
 import { RenderDataComponent } from './render-data/render-data.component';
 import { SgaMidCalendarioService } from 'src/data/services/sga_mid_calendario.service';
 import { TablaPorcentajesComponent } from './tabla-porcentajes/tabla-porcentajes.component';
+import { AuthGuard } from '../../_guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { TablaPorcentajesComponent } from './tabla-porcentajes/tabla-porcentajes
     RegistroNotasService,
     TimeService,
     ParametrosService,
+    AuthGuard,
     {
       provide: MatPaginatorIntl,
       useClass: CustomMatPaginatorIntl

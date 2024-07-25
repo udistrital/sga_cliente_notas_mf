@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../_guards/auth.guard';
+import { AuthGuard } from '../../_guards/auth.guard';
 import { NotasComponent } from './notas.component';
 import { DefinicionCortesComponent } from './definicion-cortes/definicion-cortes.component';
 import { ListNotasComponent } from './list-notas/list-notas.component';
@@ -13,18 +13,22 @@ const routes: Routes = [{
     children: [
         {
             path: 'definicion-cortes',
+            canActivate: [AuthGuard],
             component: DefinicionCortesComponent,
         },
         {
             path: 'listado',
+            canActivate: [AuthGuard],
             component: ListNotasComponent,
         },
         {
             path: 'captura',
+            canActivate: [AuthGuard],
             component: CapturaNotasComponent,
         },
         {
             path: 'crud',
+            canActivate: [AuthGuard],
             component: CrudNotasComponent,
         }
     ],
