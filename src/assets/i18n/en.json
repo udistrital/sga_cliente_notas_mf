@@ -89,6 +89,7 @@
         "hasta": "TO",
         "elije_fecha_inicio": "Choose start date",
         "elije_fecha_fin": "Choose end date",
+        "cerrar": "close",
         "sin_calendario": "No calendar found for this period ",
         "no_proceso_calificaciones": "There is no Grades process",
         "fecha_corte1": "Grades' register for First cut",
